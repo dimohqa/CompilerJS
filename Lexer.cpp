@@ -4,8 +4,8 @@ int operLength = 49;
 int reservLength = 34;
 
 void Lexer::getNextToken(string filepath) {
-    int row = 0, col = 0;
-    int int_tok;
+    int colStart;
+    TokenType int_tok;
     bool check;
     string buffer;
 
@@ -16,7 +16,7 @@ void Lexer::getNextToken(string filepath) {
     while (true) {
         char symb = in.peek();
         if (in.eof()) {
-            print_EOF();
+            print_token(col, E0F, "");
             return;
         }
         switch (symb) {
@@ -30,51 +30,54 @@ void Lexer::getNextToken(string filepath) {
             case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
             case 's': case 't': case 'v': case 'w': case 'x': case 'y':
             case 'z':
+                colStart = col;
                 int_tok = identificator(in, buffer);
-                cout << TokenOfEnum(int_tok) << "\t" << buffer << "\n";
+                print_token(colStart, int_tok, buffer);
                 break;
             case '/':
+                colStart = col;
                 check = singleLineComment(in);
                 if (!check) {
                     int_tok = op(in, buffer);
-                    if (int_tok == - 1) {
-                        break;
-                    }
-                    cout << TokenOfEnum(int_tok) << "\t" << buffer << "\n";
+                    print_token(colStart, int_tok, buffer);
                 }
                 break;
             case '"': case '`': case '\'':
+                colStart = col;
                 int_tok = stroka(in, buffer);
-                cout << TokenOfEnum(int_tok) << "\t" << buffer << "\n";
+                print_token(colStart, int_tok, buffer);
                 break;
             case '{': case '}': case '(': case ')': case '.': case '>':
             case '<': case '=': case '+': case '!': case ';': case '-':
             case '~': case '*': case '|': case '&': case '%': case '^':
             case ':': case ']': case '[': case '?': case '\\': case ',':
+                colStart = col;
                 int_tok = op(in, buffer);
-                cout << TokenOfEnum(int_tok) << "\t" << buffer << "\n";
+                print_token(colStart, int_tok, buffer);
                 break;
             case ' ':
                 in.get();
+                col++;
                 break;
             case '\n':
                 in.get();
                 row++;
+                col = 1;
                 break;
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9':
+                colStart = col;
                 int_tok = number(in, buffer);
-                cout << TokenOfEnum(int_tok) << "\t" << buffer << "\n";
+                print_token(colStart, int_tok, buffer);
                 break;
             default:
-                cout << TokenOfEnum(999) << '\t' << symb << '\n';
+                print_token(col, UNKNOWN, buffer);
                 in.get();
         }
-        col++;
     }
 }
 
-int Lexer::number(ifstream &file, string &buffer) {
+TokenType Lexer::number(ifstream &file, string &buffer) {
     buffer = "";
     int pos = 0;
     while (true) {
@@ -87,6 +90,7 @@ int Lexer::number(ifstream &file, string &buffer) {
         }
         if (symb == '0' && pos == 0) {
             symb = file.get();
+            col++;
             buffer += symb;
             if (file.peek() == '.') {
                 return realNumber(file, buffer);
@@ -94,6 +98,7 @@ int Lexer::number(ifstream &file, string &buffer) {
             return NUMBER;
         }
         symb = file.get();
+        col++;
         buffer += symb;
         pos++;
     }
@@ -106,10 +111,11 @@ int Lexer::number(ifstream &file, string &buffer) {
     return NUMBER;
 }
 
-int Lexer::realNumber(ifstream &file, string &buffer) {
+TokenType Lexer::realNumber(ifstream &file, string &buffer) {
     char symb = file.get();
     buffer += symb;
     while (true) {
+        col++;
         symb = file.peek();
         if (!isdigit(symb)) {
             break;
@@ -120,7 +126,7 @@ int Lexer::realNumber(ifstream &file, string &buffer) {
     return REAL_NUMBER;
 }
 
-int Lexer::identificator(ifstream &file, string &buffer) {
+TokenType Lexer::identificator(ifstream &file, string &buffer) {
     buffer = "";
     char symb;
     int pos = 0;
@@ -130,19 +136,20 @@ int Lexer::identificator(ifstream &file, string &buffer) {
             break;
         }
         symb = file.get();
+        col++;
         buffer += symb;
         pos++;
     }
 
     for (int i = 0; i < reservLength; i++) {
         if (buffer == reserved_words[i]) {
-            return i;
+            return static_cast<TokenType>(i);
         }
     }
     return ID;
 }
 
-int Lexer::op(ifstream &file, string &buffer) {
+TokenType Lexer::op(ifstream &file, string &buffer) {
     buffer = "";
     while (true) {
         char symb = file.peek();
@@ -153,61 +160,78 @@ int Lexer::op(ifstream &file, string &buffer) {
             break;
         }
         symb = file.get();
+        col++;
         buffer += symb;
     }
 metka:
     for (int i = 0; i < operLength; i++) {
         if (oper[i] == buffer) {
-            return i + reservLength;
+            return static_cast<TokenType>(i + reservLength);
         }
     }
     buffer.pop_back();
     file.unget();
+    col--;
     if (buffer.length() != 0) {
         goto metka;
     }
-    return 999;
+    return UNKNOWN;
 }
 
-int Lexer::singleLineComment(ifstream &file) {
+bool Lexer::singleLineComment(ifstream &file) {
     char symb = file.get();
+    col++;
     if (file.peek() == '*') {
         return multiLineComment(file);
     }
     if (file.peek() != '/') {
         file.unget();
+        col--;
         return false;
     }
     while(symb != '\n') {
         if (file.peek() == EOF) {
-            return false;
+            break;
         }
         symb = file.get();
+        col++;
+        if (symb == '\n') {
+            row++;
+            col = 1;
+        }
     }
     return true;
 }
 
 bool Lexer::multiLineComment(ifstream &file) {
     char symb = file.get();
+    col++;
     while (true) {
+        if (file.peek() == EOF) {
+            break;
+        }
         symb = file.get();
-        if (file.eof()) {
-
-            return false;
+        col++;
+        if (symb == '\n') {
+            col = 1;
+            row++;
         }
         if (symb == '*' && (char)file.peek() == '/') {
             file.get();
+            col++;
             return true;
         }
     }
 }
 
-int Lexer::stroka(ifstream &file, string &buffer) {
+TokenType Lexer::stroka(ifstream &file, string &buffer) {
     buffer = "";
     char strSymb, symb;
     symb = strSymb = file.get();
+    col++;
     while (symb != '\n') {
         buffer += symb;
+        col++;
         if ((symb = file.get()) == strSymb) {
             buffer += symb;
             return STRING;
@@ -216,6 +240,6 @@ int Lexer::stroka(ifstream &file, string &buffer) {
     return UNKNOWN;
 }
 
-void Lexer::print_EOF() {
-    cout << TokenOfEnum(E0F) << "\t" << "''" << "\n";
+void Lexer::print_token(int col, TokenType type, const string& Lex) {
+    cout << "Loc=<" << row << ':' << col << ">\t" << TokenOfEnum(type) << " \'" << Lex << '\'' << '\n';
 }

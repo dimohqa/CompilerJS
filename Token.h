@@ -25,8 +25,4 @@ struct Token {
     int col;
 };
 
-Token * createToken(Token *tok, string Lexeme, TokenType type, int row, int col);
-void printToken(Token *token);
-
-
 #endif //COMPILATOR_TOKEN_H

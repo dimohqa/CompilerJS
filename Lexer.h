@@ -36,16 +36,22 @@ const string oper[] = {
 
 class Lexer {
 private:
+    int row;
+    int col;
 public:
+    Lexer() {
+        row = 1;
+        col = 1;
+    }
     virtual void getNextToken(string filepath);
-    static int identificator(ifstream &file, string &buffer);
-    static int op(ifstream &file, string &buffer);
-    static int number(ifstream &file, string &buffer);
-    static int realNumber(ifstream &file, string &buffer);
-    static int stroka(ifstream &file, string &buffer);
-    static int singleLineComment(ifstream &file);
-    static bool multiLineComment(ifstream &file);
-    static void print_EOF();
+    TokenType identificator(ifstream &file, string &buffer);
+    TokenType op(ifstream &file, string &buffer);
+    TokenType number(ifstream &file, string &buffer);
+    TokenType realNumber(ifstream &file, string &buffer);
+    TokenType stroka(ifstream &file, string &buffer);
+    bool singleLineComment(ifstream &file);
+    bool multiLineComment(ifstream &file);
+    void print_token(int col, TokenType type, const string& Lex);
 };
 
 
