@@ -17,8 +17,6 @@ Token Lexer::getNextToken() {
     }
         char symb = file.peek();
         if (file.eof()) {
-            //print_token(col, E0F, "");
-
             exit(0);
         }
         switch (symb) {
@@ -34,16 +32,13 @@ Token Lexer::getNextToken() {
             case 'z':
                 colStart = col;
                 int_tok = identificator(file, buffer);
-                //print_token(colStart, int_tok, buffer);
                 token.set(buffer, row, colStart, int_tok);
                 return token;
-                break;
             case '/':
                 colStart = col;
                 check = singleLineComment(file);
                 if (!check) {
                     int_tok = op(file, buffer);
-                    //print_token(colStart, int_tok, buffer);
                     token.set(buffer, row, colStart, int_tok);
                     return token;
                 }
@@ -51,20 +46,16 @@ Token Lexer::getNextToken() {
             case '"': case '`': case '\'':
                 colStart = col;
                 int_tok = stroka(file, buffer);
-                //print_token(colStart, int_tok, buffer);
                 token.set(buffer, row, colStart, int_tok);
                 return token;
-                break;
             case '{': case '}': case '(': case ')': case '.': case '>':
             case '<': case '=': case '+': case '!': case ';': case '-':
             case '~': case '*': case '|': case '&': case '%': case '^':
             case ':': case ']': case '[': case '?': case '\\': case ',':
                 colStart = col;
                 int_tok = op(file, buffer);
-                //print_token(colStart, int_tok, buffer);
                 token.set(buffer, row, colStart, int_tok);
                 return token;
-                break;
             case ' ':
                 file.get();
                 col++;
@@ -78,15 +69,12 @@ Token Lexer::getNextToken() {
             case '5': case '6': case '7': case '8': case '9':
                 colStart = col;
                 int_tok = number(file, buffer);
-                //print_token(colStart, int_tok, buffer);
                 token.set(buffer, row, colStart, int_tok);
                 return token;
-                break;
             default:
-                //print_token(col, UNKNOWN, buffer);
+                file.get();
                 token.set(buffer, row, colStart, int_tok);
                 return token;
-                file.get();
         }
 }
 
