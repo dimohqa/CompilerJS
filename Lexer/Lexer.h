@@ -38,12 +38,14 @@ class Lexer {
 private:
     int row;
     int col;
+    ifstream file;
 public:
-    Lexer() {
+    Lexer(string filepath) {
         row = 1;
         col = 1;
+        file = ifstream(filepath);
     }
-    virtual void getNextToken(string filepath);
+    virtual Token getNextToken();
     TokenType identificator(ifstream &file, string &buffer);
     TokenType op(ifstream &file, string &buffer);
     TokenType number(ifstream &file, string &buffer);
@@ -51,7 +53,6 @@ public:
     TokenType stroka(ifstream &file, string &buffer);
     bool singleLineComment(ifstream &file);
     bool multiLineComment(ifstream &file);
-    void print_token(int col, TokenType type, const string& Lex);
 };
 
 

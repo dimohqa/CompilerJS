@@ -3,23 +3,23 @@
 int operLength = 49;
 int reservLength = 34;
 
-void Lexer::getNextToken(string filepath) {
+Token Lexer::getNextToken() {
     int colStart;
     TokenType int_tok;
+    Token token;
     bool check;
     string buffer;
 
-    ifstream file(filepath);
     if (!file) {
         cout << "Not read file";
 
-        return;
+        exit(0);
     }
-    while (true) {
         char symb = file.peek();
         if (file.eof()) {
-            print_token(col, E0F, "");
-            return;
+            //print_token(col, E0F, "");
+
+            exit(0);
         }
         switch (symb) {
             case '_': case '$':
@@ -34,20 +34,26 @@ void Lexer::getNextToken(string filepath) {
             case 'z':
                 colStart = col;
                 int_tok = identificator(file, buffer);
-                print_token(colStart, int_tok, buffer);
+                //print_token(colStart, int_tok, buffer);
+                token.set(buffer, row, colStart, int_tok);
+                return token;
                 break;
             case '/':
                 colStart = col;
                 check = singleLineComment(file);
                 if (!check) {
                     int_tok = op(file, buffer);
-                    print_token(colStart, int_tok, buffer);
+                    //print_token(colStart, int_tok, buffer);
+                    token.set(buffer, row, colStart, int_tok);
+                    return token;
                 }
                 break;
             case '"': case '`': case '\'':
                 colStart = col;
                 int_tok = stroka(file, buffer);
-                print_token(colStart, int_tok, buffer);
+                //print_token(colStart, int_tok, buffer);
+                token.set(buffer, row, colStart, int_tok);
+                return token;
                 break;
             case '{': case '}': case '(': case ')': case '.': case '>':
             case '<': case '=': case '+': case '!': case ';': case '-':
@@ -55,7 +61,9 @@ void Lexer::getNextToken(string filepath) {
             case ':': case ']': case '[': case '?': case '\\': case ',':
                 colStart = col;
                 int_tok = op(file, buffer);
-                print_token(colStart, int_tok, buffer);
+                //print_token(colStart, int_tok, buffer);
+                token.set(buffer, row, colStart, int_tok);
+                return token;
                 break;
             case ' ':
                 file.get();
@@ -70,13 +78,16 @@ void Lexer::getNextToken(string filepath) {
             case '5': case '6': case '7': case '8': case '9':
                 colStart = col;
                 int_tok = number(file, buffer);
-                print_token(colStart, int_tok, buffer);
+                //print_token(colStart, int_tok, buffer);
+                token.set(buffer, row, colStart, int_tok);
+                return token;
                 break;
             default:
-                print_token(col, UNKNOWN, buffer);
+                //print_token(col, UNKNOWN, buffer);
+                token.set(buffer, row, colStart, int_tok);
+                return token;
                 file.get();
         }
-    }
 }
 
 TokenType Lexer::number(ifstream &file, string &buffer) {
@@ -240,8 +251,4 @@ TokenType Lexer::stroka(ifstream &file, string &buffer) {
         }
     }
     return UNKNOWN;
-}
-
-void Lexer::print_token(int col, TokenType type, const string& Lex) {
-    cout << "Loc=<" << row << ':' << col << ">\t" << TokenOfEnum(type) << " \'" << Lex << '\'' << '\n';
 }
