@@ -18,11 +18,15 @@ enum TokenType {
     ID, UNKNOWN, STRING, NUMBER, OCT_NUMBER, HEX_NUMBER, REAL_NUMBER, E0F
 };
 
-struct Token {
+class Token {
     TokenType type;
-    string Lexeme;
+    string lexeme;
     int row;
     int col;
+public:
+    Token() {}
+    void set(string lex, int r, int c, TokenType typeToken);
+    virtual void print();
 };
 
 #endif //COMPILATOR_TOKEN_H

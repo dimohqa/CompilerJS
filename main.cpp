@@ -3,8 +3,12 @@
 #include "Lexer/Lexer.h"
 
 int main() {
-    string filepath = "/home/nitro/university/CompilerJS/js/mi2n.js";
-    Lexer lex;
-    lex.getNextToken(filepath);
+    string filepath = "/home/nitro/university/CompilerJS/js/nod.js";
+    Lexer lexer(filepath);
+
+    while (true) {
+        Token token = lexer.getNextToken();
+        token.print();
+    }
     return 0;
 }
