@@ -9,13 +9,15 @@ void Lexer::getNextToken(string filepath) {
     bool check;
     string buffer;
 
-    ifstream in(filepath);
-    if (!in.is_open()) {
+    ifstream file(filepath);
+    if (!file) {
         cout << "Not read file";
+
+        return;
     }
     while (true) {
-        char symb = in.peek();
-        if (in.eof()) {
+        char symb = file.peek();
+        if (file.eof()) {
             print_token(col, E0F, "");
             return;
         }
@@ -31,20 +33,20 @@ void Lexer::getNextToken(string filepath) {
             case 's': case 't': case 'v': case 'w': case 'x': case 'y':
             case 'z':
                 colStart = col;
-                int_tok = identificator(in, buffer);
+                int_tok = identificator(file, buffer);
                 print_token(colStart, int_tok, buffer);
                 break;
             case '/':
                 colStart = col;
-                check = singleLineComment(in);
+                check = singleLineComment(file);
                 if (!check) {
-                    int_tok = op(in, buffer);
+                    int_tok = op(file, buffer);
                     print_token(colStart, int_tok, buffer);
                 }
                 break;
             case '"': case '`': case '\'':
                 colStart = col;
-                int_tok = stroka(in, buffer);
+                int_tok = stroka(file, buffer);
                 print_token(colStart, int_tok, buffer);
                 break;
             case '{': case '}': case '(': case ')': case '.': case '>':
@@ -52,27 +54,27 @@ void Lexer::getNextToken(string filepath) {
             case '~': case '*': case '|': case '&': case '%': case '^':
             case ':': case ']': case '[': case '?': case '\\': case ',':
                 colStart = col;
-                int_tok = op(in, buffer);
+                int_tok = op(file, buffer);
                 print_token(colStart, int_tok, buffer);
                 break;
             case ' ':
-                in.get();
+                file.get();
                 col++;
                 break;
             case '\n':
-                in.get();
+                file.get();
                 row++;
                 col = 1;
                 break;
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9':
                 colStart = col;
-                int_tok = number(in, buffer);
+                int_tok = number(file, buffer);
                 print_token(colStart, int_tok, buffer);
                 break;
             default:
                 print_token(col, UNKNOWN, buffer);
-                in.get();
+                file.get();
         }
     }
 }

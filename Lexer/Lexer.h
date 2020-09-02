@@ -6,7 +6,7 @@
 #include <fstream>
 #include <utility>
 #include "Token.h"
-#include "EnumSwitch/TokenTypeSwitch.h"
+#include "../EnumSwitch/TokenTypeSwitch.h"
 
 using namespace std;
 
