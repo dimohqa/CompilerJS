@@ -19,11 +19,12 @@ enum TokenType {
 };
 
 class Token {
+public:
     TokenType type;
     string lexeme;
     int row;
     int col;
-public:
+
     Token() {}
     void set(string lex, int r, int c, TokenType typeToken);
     virtual void print();

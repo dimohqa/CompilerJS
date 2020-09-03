@@ -1,13 +1,16 @@
+#include <iostream>
+
 #ifndef COMPILATOR_NUMBEREXPRESSION_H
 #define COMPILATOR_NUMBEREXPRESSION_H
 
-
 class NumberExpression {
 private:
-    double Value;
+    std::string Value;
 
 public:
-    NumberExpression(double Value): Value(Value) {}
+    NumberExpression(std::string Value): Value(Value) {}
+
+    void print();
 };
 
 
