@@ -14,8 +14,9 @@ private:
     Lexer lexer;
 public:
     Parser(Lexer lexer): lexer(lexer) {}
-    void parse();
-    void idSemantics(Token token);
+    void parse(bool *fatalError);
+    void idSemantics(Token token, bool **fatalError);
+    void parseTopExpression(Token token, bool ***fatalError);
 };
 
 #endif

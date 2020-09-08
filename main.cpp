@@ -8,6 +8,9 @@ int main() {
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
 
+    bool fatalError = false;
+
+
     /*while (true) {
         Token token = lexer.getNextToken();
         token.print();
@@ -19,7 +22,12 @@ int main() {
 
     Parser parser(lexer);
 
-    parser.parse();
+    parser.parse(&fatalError);
+
+    if (fatalError) {
+        cout << "Fix error plz" << endl;
+        return 0;
+    }
 
     return 0;
 }
