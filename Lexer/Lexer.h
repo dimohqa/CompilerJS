@@ -38,14 +38,13 @@ class Lexer {
 private:
     int row;
     int col;
-    ifstream file;
+    ifstream &file;
 public:
-    Lexer(string filepath) {
+    Lexer(ifstream &file): file(file) {
         row = 1;
         col = 1;
-        file = ifstream(filepath);
     }
-    virtual Token getNextToken();
+    Token getNextToken();
     TokenType identificator(ifstream &file, string &buffer);
     TokenType op(ifstream &file, string &buffer);
     TokenType number(ifstream &file, string &buffer);
@@ -56,4 +55,4 @@ public:
 };
 
 
-#endif //COMPILATOR_LEXER_H
+#endif

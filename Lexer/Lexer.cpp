@@ -15,66 +15,143 @@ Token Lexer::getNextToken() {
 
         exit(0);
     }
+    while (true) {
         char symb = file.peek();
         if (file.eof()) {
-            exit(0);
+            token.set(TokenOfEnum(E0F), row, colStart, E0F);
+            return token;
         }
-        switch (symb) {
-            case '_': case '$':
-            case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G':
-            case 'H': case 'I': case 'J': case 'K': case 'L': case 'M': case 'N':
-            case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T': case 'U':
-            case 'V': case 'W': case 'X': case 'Y': case 'Z':
-            case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-            case 'g': case 'h': case 'i': case 'j': case 'k': case 'l':
-            case 'm': case 'n': case 'o': case 'p': case 'q': case 'r':
-            case 's': case 't': case 'v': case 'w': case 'x': case 'y':
-            case 'z':
-                colStart = col;
-                int_tok = identificator(file, buffer);
-                token.set(buffer, row, colStart, int_tok);
-                return token;
-            case '/':
-                colStart = col;
-                check = singleLineComment(file);
-                if (!check) {
+            switch (symb) {
+                case '_':
+                case '$':
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                case 'G':
+                case 'H':
+                case 'I':
+                case 'J':
+                case 'K':
+                case 'L':
+                case 'M':
+                case 'N':
+                case 'O':
+                case 'P':
+                case 'Q':
+                case 'R':
+                case 'S':
+                case 'T':
+                case 'U':
+                case 'V':
+                case 'W':
+                case 'X':
+                case 'Y':
+                case 'Z':
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                case 'h':
+                case 'i':
+                case 'j':
+                case 'k':
+                case 'l':
+                case 'm':
+                case 'n':
+                case 'o':
+                case 'p':
+                case 'q':
+                case 'r':
+                case 's':
+                case 't':
+                case 'v':
+                case 'w':
+                case 'x':
+                case 'y':
+                case 'z':
+                    colStart = col;
+                    int_tok = identificator(file, buffer);
+                    token.set(buffer, row, colStart, int_tok);
+                    return token;
+                case '/':
+                    colStart = col;
+                    check = singleLineComment(file);
+                    if (!check) {
+                        int_tok = op(file, buffer);
+                        token.set(buffer, row, colStart, int_tok);
+                        return token;
+                    }
+                    break;
+                case '"':
+                case '`':
+                case '\'':
+                    colStart = col;
+                    int_tok = stroka(file, buffer);
+                    token.set(buffer, row, colStart, int_tok);
+                    return token;
+                case '{':
+                case '}':
+                case '(':
+                case ')':
+                case '.':
+                case '>':
+                case '<':
+                case '=':
+                case '+':
+                case '!':
+                case ';':
+                case '-':
+                case '~':
+                case '*':
+                case '|':
+                case '&':
+                case '%':
+                case '^':
+                case ':':
+                case ']':
+                case '[':
+                case '?':
+                case '\\':
+                case ',':
+                    colStart = col;
                     int_tok = op(file, buffer);
                     token.set(buffer, row, colStart, int_tok);
                     return token;
-                }
-                break;
-            case '"': case '`': case '\'':
-                colStart = col;
-                int_tok = stroka(file, buffer);
-                token.set(buffer, row, colStart, int_tok);
-                return token;
-            case '{': case '}': case '(': case ')': case '.': case '>':
-            case '<': case '=': case '+': case '!': case ';': case '-':
-            case '~': case '*': case '|': case '&': case '%': case '^':
-            case ':': case ']': case '[': case '?': case '\\': case ',':
-                colStart = col;
-                int_tok = op(file, buffer);
-                token.set(buffer, row, colStart, int_tok);
-                return token;
-            case ' ':
-                file.get();
-                col++;
-                break;
-            case '\n':
-                file.get();
-                row++;
-                col = 1;
-                break;
-            case '0': case '1': case '2': case '3': case '4':
-            case '5': case '6': case '7': case '8': case '9':
-                colStart = col;
-                int_tok = number(file, buffer);
-                token.set(buffer, row, colStart, int_tok);
-                return token;
-            default:
-                file.get();
-                token.set(buffer, row, colStart, int_tok);
-                return token;
+                case ' ':
+                    file.get();
+                    col++;
+                    break;
+                case '\n':
+                    file.get();
+                    row++;
+                    col = 1;
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    colStart = col;
+                    int_tok = number(file, buffer);
+                    token.set(buffer, row, colStart, int_tok);
+                    return token;
+                default:
+                    file.get();
+                    //token.set(buffer, row, colStart, int_tok);
+                    //return token;
+                    break;
+            }
         }
 }
 
