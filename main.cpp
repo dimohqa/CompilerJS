@@ -9,11 +9,6 @@ int main() {
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
 
-    BinopPrecedence['<'] = 10;
-    BinopPrecedence['+'] = 20;
-    BinopPrecedence['-'] = 20;
-    BinopPrecedence['*'] = 40;
-
     /*while (true) {
         Token token = lexer.getNextToken();
         token.print();

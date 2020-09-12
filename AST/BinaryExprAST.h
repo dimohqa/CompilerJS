@@ -3,7 +3,7 @@
 
 #include "ExprAST.h"
 #include <memory>
-
+#include <iostream>
 using namespace std;
 
 class BinaryExprAST : public ExprAST {
@@ -14,6 +14,9 @@ private:
 public:
     BinaryExprAST(char op, unique_ptr<ExprAST> lhs, unique_ptr<ExprAST> rhs)
         : Op(op), LHS(move(lhs)), RHS(move(rhs)) {}
+    void print() override {
+        cout << Op << endl;
+    }
 };
 
 

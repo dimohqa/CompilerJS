@@ -50,8 +50,10 @@ public:
     TokenType number(ifstream &file, string &buffer);
     TokenType realNumber(ifstream &file, string &buffer);
     TokenType stroka(ifstream &file, string &buffer);
+    void setToken(Token token);
     bool singleLineComment(ifstream &file);
     bool multiLineComment(ifstream &file);
+    Token currentToken;
 };
 
 

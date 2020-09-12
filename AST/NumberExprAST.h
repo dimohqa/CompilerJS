@@ -1,8 +1,10 @@
 #ifndef COMPILATOR_NUMBEREXPRAST_H
 #define COMPILATOR_NUMBEREXPRAST_H
 
+#include <iostream>
 #include "ExprAST.h"
 
+using namespace std;
 
 class NumberExprAST : public ExprAST {
 private:
@@ -10,6 +12,9 @@ private:
 
 public:
     NumberExprAST(double value) : Value(value) {}
+    void print() override {
+        cout << "Value =" << Value << endl;
+    }
 };
 
 

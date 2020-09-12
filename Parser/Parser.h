@@ -23,10 +23,11 @@ public:
     Parser(Lexer lexer): lexer(lexer) {}
     void parse(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseVariable(unique_ptr<bool> &fatalError);
-    unique_ptr<ExprAST> ParsePrimary(Token token, unique_ptr<bool> &fatalError);
-    unique_ptr<ExprAST> parseExpression(Token token, unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> ParsePrimary(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseExpression(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseNumberExpression(Token token, unique_ptr<bool> &fatalError);
-    unique_ptr<ExprAST> parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS,unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseBinOpRHS(int exprPrec, Token token, unique_ptr<ExprAST> LHS, unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseParenExpr(unique_ptr<bool> &fatalError);
     void parseUnary(Token token, bool ****fatalError);
 };
 
