@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
-project(compilator)
+project(CompilerJS)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(compilator main.cpp Lexer/Lexer.cpp Lexer/Lexer.h Lexer/Token.h Lexer/Token.cpp EnumSwitch/TokenTypeSwitch.cpp EnumSwitch/TokenTypeSwitch.h Parser/Expression.cpp Parser/Expression.h Parser/VariableExpression.cpp Parser/VariableExpression.h Parser/NumberExpression.cpp Parser/NumberExpression.h Parser/CallExpression.cpp Parser/CallExpression.h Parser/Parser.cpp Parser/Parser.h Parser/Terminal.cpp Parser/Terminal.h Parser/Factor.cpp Parser/Factor.h)
+add_executable(CompilerJS main.cpp Lexer/Lexer.cpp Lexer/Lexer.h Lexer/Token.h Lexer/Token.cpp EnumSwitch/TokenTypeSwitch.cpp EnumSwitch/TokenTypeSwitch.h Parser/Parser.cpp Parser/Parser.h AST/ExprAST.cpp AST/ExprAST.h AST/NumberExprAST.cpp AST/NumberExprAST.h AST/VariableExprAST.cpp AST/VariableExprAST.h AST/BinaryExprAST.cpp AST/BinaryExprAST.h AST/CallExprAST.cpp AST/CallExprAST.h AST/FunctionAST.cpp AST/FunctionAST.h AST/PrototypeAST.cpp AST/PrototypeAST.h)
 
-target_link_libraries(compilator gtest gtest_main)
+target_link_libraries(CompilerJS gtest gtest_main)
 
 add_subdirectory(Google_tests)

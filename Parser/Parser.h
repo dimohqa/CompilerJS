@@ -17,6 +17,7 @@ public:
     void parse(bool *fatalError);
     void idSemantics(Token token, bool **fatalError);
     void parseTopExpression(Token token, bool ***fatalError);
+    void parseUnary(Token token, bool ****fatalError);
 };
 
 #endif

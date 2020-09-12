@@ -10,6 +10,13 @@ bool isId(TokenType type) {
     return true;
 }
 
+void Parser::parseUnary(Token token, bool ****fatalError) {
+    Token nextToken = lexer.getNextToken();
+    if (token.row + 1 == nextToken.row && nextToken.type == NUMBER) {
+        
+    }
+}
+
 void printError(string error, Token token) {
     cout << error << endl << '[' << token.col << ',' << token.row << "]: " << token.lexeme << endl;
 }
@@ -20,6 +27,8 @@ void Parser::parseTopExpression(Token token, bool ***fatalError) {
         case PLUS:
         case MINUS: {
             temp_token = lexer.getNextToken();
+            if (temp_token.type == MINUS || temp_token.type == PLUS)
+                parseTopExpression(temp_token);
             if (temp_token.type != ID && temp_token.type != OCT_NUMBER &&
                 temp_token.type != HEX_NUMBER && temp_token.type != REAL_NUMBER) {
                 printError("Нераспознанный идентификатор", temp_token);
