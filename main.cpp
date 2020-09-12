@@ -1,12 +1,18 @@
 #include <iostream>
 #include <memory>
+#include <ctype.h>
 #include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
 
 int main() {
-    string filepath = "/home/nitro/university/CompilerJS/js/chisl.js";
+    string filepath = "/home/nitro/university/CompilerJS/js/main.js";
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
+
+    BinopPrecedence['<'] = 10;
+    BinopPrecedence['+'] = 20;
+    BinopPrecedence['-'] = 20;
+    BinopPrecedence['*'] = 40;
 
     /*while (true) {
         Token token = lexer.getNextToken();

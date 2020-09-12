@@ -10,18 +10,80 @@ bool isId(TokenType type) {
     return true;
 }
 
-void Parser::parseUnary(Token token, bool ****fatalError) {
-    Token nextToken = lexer.getNextToken();
-    if (token.row + 1 == nextToken.row && nextToken.type == NUMBER) {
-        
-    }
-}
-
 void printError(string error, Token token) {
     cout << error << endl << '[' << token.col << ',' << token.row << "]: " << token.lexeme << endl;
 }
 
-void Parser::parseTopExpression(Token token, unique_ptr<bool> &fatalError) {
+int GetTokPrecedence(Token token) {
+    const char op = token.lexeme[0];
+    if (!isascii(op))
+        return -1;
+
+    const int TokPrec = BinopPrecedence[op];
+    if (TokPrec <= 0) return -1;
+    return TokPrec;
+}
+
+unique_ptr<ExprAST> Parser::parseExpression(Token token, unique_ptr<bool> &fatalError) {
+    auto LHS = ParsePrimary(token, fatalError);
+
+    if (!LHS)
+        return nullptr;
+
+    return parseBinOpRHS(0, move(LHS), fatalError);
+
+}
+
+unique_ptr<ExprAST> Parser::ParsePrimary(Token token, unique_ptr<bool> &fatalError) {
+    Token temp_token = token;
+    switch (temp_token.type) {
+        case NUMBER:
+            return parseNumberExpression(temp_token, fatalError);
+        default:
+            fatalError.reset(new bool(true));
+            printError("В массиве не может быть такого значения: ", temp_token);
+    }
+    return nullptr;
+}
+
+unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS, unique_ptr<bool> &fatalError) {
+    Token temp_token = lexer.getNextToken();
+    while (true) {
+        int tokPrec = GetTokPrecedence(temp_token);
+
+        if (tokPrec < exprPrec)
+            return LHS;
+
+        int BinOp = tokPrec;
+
+        temp_token = lexer.getNextToken();
+
+        unique_ptr<ExprAST> RHS = ParsePrimary(temp_token, fatalError);
+
+        if (!RHS)
+            return 0;
+
+        temp_token = lexer.getNextToken();
+
+        int nextPrec = GetTokPrecedence(temp_token);
+
+        if (tokPrec < nextPrec) {
+            RHS = parseBinOpRHS(tokPrec + 1, move(RHS), fatalError);
+            if (RHS == 0)
+                return 0;
+        }
+
+        LHS = make_unique<BinaryExprAST>(BinOp, move(LHS), move(RHS));
+    }
+}
+
+unique_ptr<ExprAST> Parser::parseNumberExpression(Token token, unique_ptr<bool> &fatalError) {
+    const double number = stod(token.lexeme);
+
+    return make_unique<NumberExprAST>(number);
+}
+
+/*unique_ptr<ExprAST> Parser::parseTopLevelExpression(Token token, unique_ptr<bool> &fatalError) {
     Token temp_token = token;
     switch (temp_token.type) {
         case PLUS:
@@ -43,10 +105,21 @@ void Parser::parseTopExpression(Token token, unique_ptr<bool> &fatalError) {
             }
             break;
         }
-        case NUMBER:
-            break;
+        case NUMBER: {
+            const double number = stod(temp_token.lexeme);
+
+            Token next_token = lexer.getNextToken();
+
+            if (temp_token.type == SEMICOLON || next_token.row != temp_token.row)
+                return make_unique<NumberExprAST>(number);
+
+            return parseNumberExpression(next_token, fatalError);
+        }
+        default:
+            fatalError.reset(new bool(true));
+            printError("В массиве не может быть такого значения: ", temp_token);
     }
-}
+}*/
 
 void Parser::parse(unique_ptr<bool> &fatalError) {
     Token temp_token = lexer.getNextToken();
@@ -62,11 +135,12 @@ void Parser::parse(unique_ptr<bool> &fatalError) {
     return;
 }
 
-void Parser::parseVariable(unique_ptr<bool> &fatalError) {
+unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
     Token temp_token = lexer.getNextToken();
 
     if (temp_token.type != ID) {
         fatalError.reset(new bool(true));
+
         printError("Ошибка: некорректное имя переменной: ", temp_token);
     }
 
@@ -81,8 +155,10 @@ void Parser::parseVariable(unique_ptr<bool> &fatalError) {
                 case HEX_NUMBER:
                 case REAL_NUMBER:
                 case OCT_NUMBER:
-                case ID:
-                    break;
+                case ID: {
+                    //parseTopLevelExpression(temp_token, fatalError);
+                    parseExpression(temp_token, fatalError);
+                }
                 case LBRACE: {
                     bool first = true;
                     while (true) {
@@ -101,7 +177,7 @@ void Parser::parseVariable(unique_ptr<bool> &fatalError) {
                         if (temp_token.type == RBRACE)
                             break;
 
-                        parseTopExpression(temp_token, fatalError);
+                        //parseTopLevelExpression(temp_token, fatalError);
                     }
                     break;
                 }
