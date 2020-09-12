@@ -54,6 +54,11 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
             return parseNumberExpression(temp_token, fatalError);
         case LPAREN:
             return parseParenExpr(fatalError);
+        case LBRACE: {
+            auto ptr = parseBraceExpr(fatalError);
+            ptr->print();
+            return ptr;
+        }
         default:
             fatalError.reset(new bool(true));
             printError("Неизвестное выражение: ", temp_token);
@@ -73,6 +78,27 @@ unique_ptr<ExprAST> Parser::parseParenExpr(unique_ptr<bool> &fatalError) {
     }
 
     return expr;
+}
+
+unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
+    auto arrayExpression = make_unique<ArrayExprAST>(ArrayExprAST());
+    Token temp_token = lexer.getNextToken();
+    while (true) {
+        if (lexer.currentToken.type == SEMICOLON)
+            continue;
+
+        if (temp_token.type == RBRACE) {
+            break;
+        }
+
+        auto expr = parseExpression(fatalError);
+
+        if (!expr)
+            return nullptr;
+
+        arrayExpression->pushExpression(move(expr));
+    }
+    return arrayExpression;
 }
 
 unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, Token temp_token, unique_ptr<ExprAST> LHS, unique_ptr<bool> &fatalError) {
