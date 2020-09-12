@@ -21,25 +21,25 @@ void printError(string error, Token token) {
     cout << error << endl << '[' << token.col << ',' << token.row << "]: " << token.lexeme << endl;
 }
 
-void Parser::parseTopExpression(Token token, bool ***fatalError) {
+void Parser::parseTopExpression(Token token, unique_ptr<bool> &fatalError) {
     Token temp_token = token;
     switch (temp_token.type) {
         case PLUS:
         case MINUS: {
             temp_token = lexer.getNextToken();
             if (temp_token.type == MINUS || temp_token.type == PLUS)
-                parseTopExpression(temp_token);
+                //parseTopExpression(temp_token);
             if (temp_token.type != ID && temp_token.type != OCT_NUMBER &&
                 temp_token.type != HEX_NUMBER && temp_token.type != REAL_NUMBER) {
                 printError("Нераспознанный идентификатор", temp_token);
-                ***fatalError = true;
+                fatalError.reset(new bool(true));
                 break;
             }
 
             Token nextToken = lexer.getNextToken();
             if (nextToken.col == temp_token.col || temp_token.type == SEMICOLON) {
                 printError("Укажите ';' или передвиньте каретку на новую строку: ", temp_token);
-                ***fatalError = true;
+                fatalError.reset(new bool(true));
             }
             break;
         }
@@ -48,13 +48,13 @@ void Parser::parseTopExpression(Token token, bool ***fatalError) {
     }
 }
 
-void Parser::parse(bool *fatalError) {
+void Parser::parse(unique_ptr<bool> &fatalError) {
     Token temp_token = lexer.getNextToken();
 
     switch (temp_token.type) {
         case KW_VAR:
         case KW_CONST:
-            idSemantics(temp_token, &fatalError);
+            parseVariable(fatalError);
         default:
             break;
     }
@@ -62,11 +62,11 @@ void Parser::parse(bool *fatalError) {
     return;
 }
 
-void Parser::idSemantics(Token token, bool **fatalError) {
+void Parser::parseVariable(unique_ptr<bool> &fatalError) {
     Token temp_token = lexer.getNextToken();
 
     if (temp_token.type != ID) {
-        **fatalError = true;
+        fatalError.reset(new bool(true));
         printError("Ошибка: некорректное имя переменной: ", temp_token);
     }
 
@@ -89,7 +89,7 @@ void Parser::idSemantics(Token token, bool **fatalError) {
                         temp_token = lexer.getNextToken();
 
                         if (first && temp_token.type == COMMA) {
-                            **fatalError = true;
+                            fatalError.reset(new bool(true));
                             printError("Ошибка: массив не может начинаться с: ", temp_token);
                             break;
                         }
@@ -101,14 +101,13 @@ void Parser::idSemantics(Token token, bool **fatalError) {
                         if (temp_token.type == RBRACE)
                             break;
 
-                        parseTopExpression(temp_token, &fatalError);
+                        parseTopExpression(temp_token, fatalError);
                     }
                     break;
                 }
                 default:
-                    **fatalError = true;
                     printError("В массиве не может быть такого значения: ", temp_token);
-
+                    fatalError.reset(new bool(true));
             }
             break;
         case SEMICOLON:
