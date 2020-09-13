@@ -6,8 +6,11 @@
 class ExprAST {
 public:
     virtual ~ExprAST() {}
+    virtual ExprAST* get() {
+        return nullptr;
+    }
     virtual void print() {
-       std::cout << 'kek';
+        std::cout << "lel" << std::endl;
     };
 };
 

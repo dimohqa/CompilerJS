@@ -53,7 +53,6 @@ public:
     void setToken(Token token);
     bool singleLineComment(ifstream &file);
     bool multiLineComment(ifstream &file);
-    Token currentToken;
 };
 
 

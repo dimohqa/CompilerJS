@@ -13,12 +13,13 @@ private:
     vector<unique_ptr<ExprAST>> Elements;
 
 public:
-    ArrayExprAST() {}
+    ArrayExprAST() {
+    }
     void pushExpression(unique_ptr<ExprAST> element);
     void print() override {
         cout << Elements.size() << endl;
         for (int i = 0; i < Elements.size(); i++) {
-            Elements[i]->print();
+            Elements[i].get()->print();
         }
     }
 };

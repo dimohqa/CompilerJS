@@ -19,7 +19,6 @@ Token Lexer::getNextToken() {
         char symb = file.peek();
         if (file.eof()) {
             token.set(TokenOfEnum(E0F), row, colStart, E0F);
-            currentToken = token;
             return token;
         }
             switch (symb) {
@@ -79,7 +78,6 @@ Token Lexer::getNextToken() {
                     colStart = col;
                     int_tok = identificator(file, buffer);
                     token.set(buffer, row, colStart, int_tok);
-                    currentToken = token;
                     return token;
                 case '/':
                     colStart = col;
@@ -87,7 +85,6 @@ Token Lexer::getNextToken() {
                     if (!check) {
                         int_tok = op(file, buffer);
                         token.set(buffer, row, colStart, int_tok);
-                        currentToken = token;
                         return token;
                     }
                     break;
@@ -97,7 +94,6 @@ Token Lexer::getNextToken() {
                     colStart = col;
                     int_tok = stroka(file, buffer);
                     token.set(buffer, row, colStart, int_tok);
-                    currentToken = token;
                     return token;
                 case '{':
                 case '}':
@@ -126,7 +122,6 @@ Token Lexer::getNextToken() {
                     colStart = col;
                     int_tok = op(file, buffer);
                     token.set(buffer, row, colStart, int_tok);
-                    currentToken = token;
                     return token;
                 case ' ':
                     file.get();
@@ -150,7 +145,6 @@ Token Lexer::getNextToken() {
                     colStart = col;
                     int_tok = number(file, buffer);
                     token.set(buffer, row, colStart, int_tok);
-                    currentToken = token;
                     return token;
                 default:
                     file.get();

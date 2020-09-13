@@ -21,10 +21,13 @@ int main() {
 
     unique_ptr<bool> fatalError(new bool(false));
 
-    parser.parse(fatalError);
+    unique_ptr<FunctionAST> main = parser.parse(fatalError);
+
+    cout << "TREE: " << endl;
+    main->getBody()->print();
 
     if (*fatalError) {
-        cout << "Fix error plz" << endl;
+        cout << endl << "Fix error plz" << endl;
         return 0;
     }
 
