@@ -42,7 +42,7 @@ unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
-    getNextToken();
+    currentToken.print();
     switch (currentToken.type) {
         case NUMBER:
         case STRING:
@@ -55,7 +55,6 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
             return parseParenExpr(fatalError);
         case LBRACE: {
             auto ptr = parseBraceExpr(fatalError);
-            //ptr->print();
             return ptr;
         }
         default:
@@ -66,6 +65,7 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
 }
 
 unique_ptr<ExprAST> Parser::parseParenExpr(unique_ptr<bool> &fatalError) {
+    getNextToken();
     auto expr = parseExpression(fatalError);
 
     if (!expr)
@@ -81,16 +81,20 @@ unique_ptr<ExprAST> Parser::parseParenExpr(unique_ptr<bool> &fatalError) {
 
 unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
     auto arrayExpression = make_unique<ArrayExprAST>(ArrayExprAST());
+
+    getNextToken();
     while (true) {
-        //getNextToken();
-        //currentToken.print();
         if (currentToken.type == RBRACE)
             break;
-        if (currentToken.type == COMMA)
+        if (currentToken.type == COMMA) {
+            cout << "comma = ";
+            currentToken.print();
+            getNextToken();
             continue;
+        }
 
         auto expr = parseExpression(fatalError);
-        expr->print();
+        //expr->print();
         if (!expr)
             return nullptr;
 
@@ -108,6 +112,7 @@ unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS,
 
         char binOp = currentToken.lexeme[0];
 
+        getNextToken();
         unique_ptr<ExprAST> RHS = ParsePrimary(fatalError);
 
         if (!RHS)
@@ -142,10 +147,14 @@ unique_ptr<FunctionAST> Parser::parse(unique_ptr<bool> &fatalError) {
             case KW_CONST:
                 body->push(parseVariable(fatalError));
                 break;
+            //case KW_IF:
+            //    body->push(parseIF(fatalError));
+            //    break;
             case SEMICOLON:
                 getNextToken();
                 break;
             case E0F: {
+                body.get()->print();
                 auto proto = make_unique<PrototypeAST>("main", vector<string>());
                 return make_unique<FunctionAST>(move(proto), move(body));
             }
@@ -156,6 +165,11 @@ unique_ptr<FunctionAST> Parser::parse(unique_ptr<bool> &fatalError) {
                 break;
         }
     }
+}
+
+unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
+    getNextToken();
+    return nullptr;
 }
 
 unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
@@ -174,6 +188,7 @@ unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
     getNextToken();
 
     if (currentToken.type == EQUAL) {
+        getNextToken();
         variable->setExpr(parseExpression(fatalError));
 
         return variable;

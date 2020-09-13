@@ -23,8 +23,8 @@ int main() {
 
     unique_ptr<FunctionAST> main = parser.parse(fatalError);
 
-    cout << "TREE: " << endl;
-    main->getBody()->print();
+    //cout << "TREE: " << endl;
+    //main->getBody()->print();
 
     if (*fatalError) {
         cout << endl << "Fix error plz" << endl;

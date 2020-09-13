@@ -15,7 +15,11 @@ public:
     BinaryExprAST(char op, unique_ptr<ExprAST> lhs, unique_ptr<ExprAST> rhs)
         : Op(op), LHS(move(lhs)), RHS(move(rhs)) {}
     void print() override {
-        cout << Op << endl;
+        cout << '\t' << Op << endl;
+        LHS.get()->print();
+        cout << '\t';
+        RHS.get()->print();
+        cout << endl;
     }
 };
 

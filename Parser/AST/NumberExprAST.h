@@ -13,7 +13,7 @@ private:
 public:
     NumberExprAST(double value) : Value(value) {}
     void print() override {
-        cout << "Value =" << Value << endl;
+        cout << "Value = " << Value << ';';
     }
 };
 

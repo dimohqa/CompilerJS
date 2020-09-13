@@ -1,6 +1,2 @@
-let a = 10
-const b = 30;
-
-if (true) {
-
-}
+let a = [1, 3 * 10 + 5];
+const ba = 5;

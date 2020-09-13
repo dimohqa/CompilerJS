@@ -17,10 +17,11 @@ public:
     }
     void pushExpression(unique_ptr<ExprAST> element);
     void print() override {
-        cout << Elements.size() << endl;
+        cout << "array, size = " << Elements.size() << endl;
         for (int i = 0; i < Elements.size(); i++) {
             Elements[i].get()->print();
         }
+        cout << endl;
     }
 };
 
