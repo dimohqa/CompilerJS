@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class BodyAST {
+class BodyAST: public ExprAST {
 private:
     vector<unique_ptr<ExprAST>> Child;
 
@@ -19,9 +19,9 @@ public:
     }
     void print() {
         for (int i = 0; i < Child.size(); ++i) {
-            Child[i].get()->print();
+            //Child[i].get()->print();
             cout << '\t';
-            Child[i]->get()->print();
+            //Child[i]->get()->print();
         }
     }
 };

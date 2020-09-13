@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include "ExprAST.h"
 
 using namespace std;
 
-class PrototypeAST {
+class PrototypeAST: public ExprAST {
 private:
     string Name;
     vector<string> Args;

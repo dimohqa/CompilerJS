@@ -16,6 +16,7 @@
 #include "AST/CallExprAST.h"
 #include "AST/FunctionAST.h"
 #include "AST/BodyAST.h"
+#include "AST/IfAST.h"
 
 using namespace std;
 
@@ -31,7 +32,7 @@ public:
     Token getNextToken() {
         return currentToken = lexer.getNextToken();
     }
-    unique_ptr<FunctionAST> parse(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parse(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseVariable(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> ParsePrimary(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseExpression(unique_ptr<bool> &fatalError);

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class FunctionAST {
+class FunctionAST: public ExprAST {
 private:
     unique_ptr<PrototypeAST> Proto;
     unique_ptr<BodyAST> Body;

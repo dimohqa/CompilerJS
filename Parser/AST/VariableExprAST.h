@@ -22,7 +22,6 @@ public:
     void print() override {
         cout << "Name = " << Name << endl;
     }
-    //void addExpr(unique_ptr<ExprAST> expr): Expr(expr) {}
 };
 
 
