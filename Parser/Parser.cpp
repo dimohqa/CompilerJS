@@ -169,14 +169,13 @@ unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
     auto parenExpr = parseParenExpr(fatalError);
     if (!parenExpr)
         return nullptr;
-    //auto ifConstruction = make_unique<IfAST>(move(parenExpr), nullptr);
 
     getNextToken(); // '{'
-    unique_ptr<ExprAST> body = parse(fatalError);
+    auto body = parse(fatalError);
     if (!body)
         return nullptr;
-    auto ifConstruction = make_unique<IfAST>(move(parenExpr), move(body));
-    return ifConstruction;
+
+    return make_unique<IfAST>(move(parenExpr), move(body));
 }
 
 unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
