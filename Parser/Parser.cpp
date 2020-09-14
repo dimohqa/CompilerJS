@@ -146,6 +146,9 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
             case KW_IF:
                 body->push(parseIF(fatalError));
                 break;
+            case KW_WHILE:
+                body->push(parseWhile(fatalError));
+                break;
             case SEMICOLON:
                 getNextToken();
                 break;
@@ -196,6 +199,20 @@ unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
         return nullptr;
 
     return make_unique<IfAST>(move(parenExpr), move(body));
+}
+
+unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
+    getNextToken(); // '('
+    auto parenExpr = parseParenExpr(fatalError);
+    if (!parenExpr)
+        return nullptr;
+
+    getNextToken(); // '{'
+    auto body = parse(fatalError);
+    if (!body)
+        return nullptr;
+
+    return make_unique<WhileAST>(move(parenExpr), move(body));
 }
 
 unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
