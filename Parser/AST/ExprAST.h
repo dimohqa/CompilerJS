@@ -14,6 +14,9 @@ public:
     virtual ExprAST* get() {
         return nullptr;
     }
+    virtual void setExpr(unique_ptr<ExprAST> expr) {
+        cout << "prov" << endl;
+    }
     virtual void print() {
         std::cout << "lel" << std::endl;
     };

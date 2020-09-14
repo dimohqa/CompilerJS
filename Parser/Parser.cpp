@@ -38,10 +38,11 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
         case HEX_NUMBER:
         case REAL_NUMBER:
         case OCT_NUMBER:
-        case ID:
             return parseNumberExpression(fatalError);
         case STRING:
             return parseStringExpression(fatalError);
+        case ID:
+            return parseID(fatalError);
         case LPAREN:
             return parseParenExpr(fatalError);
         case LBRACE: {
@@ -162,6 +163,19 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
         }
     }
 }
+
+unique_ptr<ExprAST> Parser::parseID(unique_ptr<bool> &fatalError) {
+    if (currentToken.type != ID) {
+        fatalError.reset(new bool(true));
+
+        printError("Ошибка: некорректное имя переменной: ", currentToken);
+
+        return nullptr;
+    }
+
+    return make_unique<VariableExprAST>(currentToken.lexeme, nullptr);
+}
+
 unique_ptr<ExprAST> Parser::parseReturn(unique_ptr<bool> &fatalError) {
     getNextToken();
     if (auto ret = parseExpression(fatalError)) {
@@ -187,15 +201,7 @@ unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
 unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
     getNextToken();
 
-    if (currentToken.type != ID) {
-        fatalError.reset(new bool(true));
-
-        printError("Ошибка: некорректное имя переменной: ", currentToken);
-
-        return nullptr;
-    }
-
-    auto variable = make_unique<VariableExprAST>(currentToken.lexeme, nullptr);
+    auto variable = parseID(fatalError);;
 
     getNextToken();
 

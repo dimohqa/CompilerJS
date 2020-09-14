@@ -46,6 +46,7 @@ public:
     unique_ptr<ExprAST> parseTopLevel(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseIF(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseReturn(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseID(unique_ptr<bool> &fatalError);
     void parseUnary(Token token, bool ****fatalError);
 };
 
