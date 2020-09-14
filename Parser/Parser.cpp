@@ -37,11 +37,12 @@ unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
         return nullptr;
 
     getNextToken();
-
+    //currentToken.print();
     return parseBinOpRHS(0, move(LHS), fatalError);
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
+    //currentToken.print();
     switch (currentToken.type) {
         case NUMBER:
         case STRING:
@@ -143,6 +144,9 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
             case KW_CONST:
                 body->push(parseVariable(fatalError));
                 break;
+            case KW_RETURN:
+                body->push(parseReturn(fatalError));
+                break;
             case KW_IF:
                 body->push(parseIF(fatalError));
                 break;
@@ -162,6 +166,13 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
                 break;
         }
     }
+}
+unique_ptr<ExprAST> Parser::parseReturn(unique_ptr<bool> &fatalError) {
+    getNextToken();
+    if (auto ret = parseExpression(fatalError)) {
+        return make_unique<ReturnExprAST>(move(ret));
+    }
+    return nullptr;
 }
 
 unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {

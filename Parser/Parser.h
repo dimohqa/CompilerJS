@@ -17,6 +17,7 @@
 #include "AST/FunctionAST.h"
 #include "AST/BodyAST.h"
 #include "AST/IfAST.h"
+#include "AST/ReturnExprAST.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ public:
     unique_ptr<ExprAST> parseBraceExpr(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseTopLevel(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseIF(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseReturn(unique_ptr<bool> &fatalError);
     void parseUnary(Token token, bool ****fatalError);
 };
 
