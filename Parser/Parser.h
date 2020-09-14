@@ -18,6 +18,7 @@
 #include "AST/BodyAST.h"
 #include "AST/IfAST.h"
 #include "AST/ReturnExprAST.h"
+#include "AST/StringExprAST.h"
 
 using namespace std;
 
@@ -38,6 +39,7 @@ public:
     unique_ptr<ExprAST> ParsePrimary(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseExpression(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseNumberExpression(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseStringExpression(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS, unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseParenExpr(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseBraceExpr(unique_ptr<bool> &fatalError);

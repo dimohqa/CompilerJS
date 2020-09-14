@@ -2,6 +2,11 @@
 #define COMPILATOR_EXPRAST_H
 
 #include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
+using namespace std;
 
 class ExprAST {
 public:

@@ -1,15 +1,6 @@
 #include "Parser.h"
 #include <memory>
 
-bool isId(TokenType type) {
-    if (type != NUMBER && type != STRING &&
-        type != HEX_NUMBER && type != REAL_NUMBER &&
-        type != OCT_NUMBER && type != ID) {
-        return false;
-    }
-    return true;
-}
-
 void printError(string error, Token token) {
     cout << error << endl
          << '[' << token.row << ',' << token.col << "]: " << token.lexeme << endl;
@@ -42,15 +33,15 @@ unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
-    //currentToken.print();
     switch (currentToken.type) {
         case NUMBER:
-        case STRING:
         case HEX_NUMBER:
         case REAL_NUMBER:
         case OCT_NUMBER:
         case ID:
             return parseNumberExpression(fatalError);
+        case STRING:
+            return parseStringExpression(fatalError);
         case LPAREN:
             return parseParenExpr(fatalError);
         case LBRACE: {
@@ -132,6 +123,10 @@ unique_ptr<ExprAST> Parser::parseNumberExpression(unique_ptr<bool> &fatalError) 
     const double number = stod(currentToken.lexeme);
 
     return make_unique<NumberExprAST>(number);
+}
+
+unique_ptr<ExprAST> Parser::parseStringExpression(unique_ptr<bool> &fatalError) {
+        return make_unique<StringExprAST>(currentToken.lexeme);
 }
 
 unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
