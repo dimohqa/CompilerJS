@@ -10,11 +10,11 @@ using namespace std;
 class CallExprAST : public ExprAST {
 private:
     string Callee;
-    vector<ExprAST *> Args;
+    vector<unique_ptr<ExprAST>> Args;
 
 public:
-    CallExprAST(const string &callee, vector<ExprAST *> &args)
-        : Callee(callee), Args(args) {}
+    CallExprAST(const string &callee, vector<unique_ptr<ExprAST>> args)
+        : Callee(callee), Args(move(args)) {}
 };
 
 

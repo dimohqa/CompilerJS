@@ -33,6 +33,7 @@ unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
+    //currentToken.print();
     switch (currentToken.type) {
         case NUMBER:
         case HEX_NUMBER:
@@ -58,6 +59,14 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
 
 unique_ptr<ExprAST> Parser::parseParenExpr(unique_ptr<bool> &fatalError) {
     getNextToken();
+
+    if (currentToken.type == RPAREN) {
+        fatalError.reset(new bool(true));
+        printError("Ожидалось выражение внутри скобок: ", currentToken);
+
+        return nullptr;
+    }
+
     auto expr = parseExpression(fatalError);
 
     if (!expr)
@@ -75,6 +84,7 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
     auto arrayExpression = make_unique<ArrayExprAST>(ArrayExprAST());
 
     getNextToken();
+
     while (true) {
         if (currentToken.type == RBRACE)
             break;
@@ -89,6 +99,7 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
 
         arrayExpression->pushExpression(move(expr));
     }
+    currentToken.print();
     return arrayExpression;
 }
 
@@ -175,8 +186,31 @@ unique_ptr<ExprAST> Parser::parseID(unique_ptr<bool> &fatalError) {
 
         return nullptr;
     }
+    const string name = currentToken.lexeme;
 
-    return make_unique<VariableExprAST>(currentToken.lexeme, nullptr);
+    getNextToken();
+
+    if (currentToken.type != LPAREN)
+        return make_unique<VariableExprAST>(name, nullptr);
+
+    vector<unique_ptr<ExprAST>> Args;
+    getNextToken();
+    while (true) {
+        if (currentToken.type == RPAREN)
+            break;
+        if (currentToken.type == COMMA) {
+            getNextToken();
+            continue;
+        }
+
+        if (auto Arg = parseExpression(fatalError)) {
+            Args.push_back(move(Arg));
+        } else {
+            return nullptr;
+        }
+    }
+
+    return make_unique<CallExprAST>(name, move(Args));
 }
 
 unique_ptr<ExprAST> Parser::parseReturn(unique_ptr<bool> &fatalError) {
@@ -217,11 +251,11 @@ unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
 
 unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
     getNextToken();
-
+    //currentToken.print();
     auto variable = parseID(fatalError);;
 
-    getNextToken();
-
+    //getNextToken();
+    //currentToken.print();
     if (currentToken.type == EQUAL) {
         getNextToken();
         variable->setExpr(parseExpression(fatalError));
