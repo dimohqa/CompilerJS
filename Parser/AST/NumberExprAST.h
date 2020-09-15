@@ -12,8 +12,9 @@ private:
 
 public:
     NumberExprAST(double value) : Value(value) {}
-    void print() override {
-        cout << "Value = " << Value << ';';
+    void print(int level) override {
+        printLevel(level);
+        cout << "Number: " << Value << endl;
     }
 };
 

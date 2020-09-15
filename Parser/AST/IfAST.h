@@ -16,7 +16,7 @@ private:
 public:
     IfAST(unique_ptr<ExprAST> condition, unique_ptr<ExprAST> body)
         : Condition(move(condition)), Body(move(body)) {}
-    void print() override {
+    void print(int level) override {
 
     }
 };

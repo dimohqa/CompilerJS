@@ -17,11 +17,9 @@ public:
     void push(unique_ptr<ExprAST> child) {
         Child.push_back(move(child));
     }
-    void print() {
+    void print(int level) override {
         for (int i = 0; i < Child.size(); ++i) {
-            //Child[i].get()->print();
-            cout << '\t';
-            //Child[i]->get()->print();
+            Child[i].get()->print(level + 1);
         }
     }
 };

@@ -21,8 +21,11 @@ public:
     ExprAST* get() override {
         return Expr.get();
     }
-    void print() override {
-        cout << "Name = " << Name << endl;
+    void print(int level) override {
+        printLevel(level);
+        cout << "Variable name: " << Name << endl;
+        if (Expr.get())
+            Expr.get()->print(level + 1);
     }
 };
 

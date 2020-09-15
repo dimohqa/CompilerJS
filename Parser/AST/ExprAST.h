@@ -17,7 +17,12 @@ public:
     virtual void setExpr(unique_ptr<ExprAST> expr) {
         cout << "prov" << endl;
     }
-    virtual void print() {
+    void printLevel(int level) {
+        for (int i = 0; i < level; i++) {
+            cout << ' ';
+        }
+    }
+    virtual void print(int level) {
         std::cout << "lel" << std::endl;
     };
 };

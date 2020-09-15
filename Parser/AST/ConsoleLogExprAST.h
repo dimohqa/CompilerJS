@@ -5,9 +5,15 @@
 
 class ConsoleLogExprAST: public ExprAST  {
 private:
-    unique_ptr<ExprAST> Args;
+    unique_ptr<ExprAST> Arg;
 public:
-    ConsoleLogExprAST(unique_ptr<ExprAST> args): Args(move(args)) {}
+    ConsoleLogExprAST(unique_ptr<ExprAST> arg): Arg(move(arg)) {}
+    void print(int level) {
+        printLevel(level);
+        cout << "Arg = ";
+        Arg.get()->print(level);
+        cout << endl;
+    }
 };
 
 

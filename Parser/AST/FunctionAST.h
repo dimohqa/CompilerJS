@@ -20,9 +20,11 @@ public:
     unique_ptr<BodyAST> getBody() {
         return move(Body);
     }
-    //vector<unique_ptr<ExprAST>> getBody() {
-    //    return Body->get();
-    //}
+    void print(int level) {
+        printLevel(level);
+        cout << "Proto" << endl;
+        Body.get()->print(level + 1);
+    }
 };
 
 

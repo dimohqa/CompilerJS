@@ -5,7 +5,7 @@
 #include "Parser/Parser.h"
 
 int main() {
-    string filepath = "/home/nitro/university/CompilerJS/js/nod.js";
+    string filepath = "/home/nitro/university/CompilerJS/js/chisl.js";
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
 
@@ -24,7 +24,7 @@ int main() {
     unique_ptr<ExprAST> main = parser.parse(fatalError);
     cout << "TREE: " << endl;
     auto b = main.get();
-    b->print();
+    b->print(0);
     if (*fatalError) {
         cout << endl << "Fix error plz" << endl;
         return 0;

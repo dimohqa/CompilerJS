@@ -16,12 +16,14 @@ public:
     ArrayExprAST() {
     }
     void pushExpression(unique_ptr<ExprAST> element);
-    void print() override {
-        cout << "array, size = " << Elements.size() << endl;
+    void print(int level) override {
+        printLevel(level);
+        cout << "Array = [";
         for (int i = 0; i < Elements.size(); i++) {
-            Elements[i].get()->print();
+            Elements[i].get()->print(level);
+            cout << ", ";
         }
-        cout << endl;
+        cout << "]" << endl;
     }
 };
 

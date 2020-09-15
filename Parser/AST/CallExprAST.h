@@ -15,6 +15,10 @@ private:
 public:
     CallExprAST(const string &callee, vector<unique_ptr<ExprAST>> args)
         : Callee(callee), Args(move(args)) {}
+    void print(int level) override {
+        printLevel(level);
+        cout << "Call = " << Callee << endl;
+    }
 };
 
 
