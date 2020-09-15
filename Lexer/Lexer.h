@@ -19,7 +19,7 @@ const string reserved_words[] = {
         "typeof",       "continue", "Infinity", "NaN",
         "delete",       "switch",   "try",      "catch",
         "throw",        "finally",  "with",     "debugger",
-        "const",        "let"
+        "const",        "let",      "console",  "log"
 };
 
 const string oper[] = {

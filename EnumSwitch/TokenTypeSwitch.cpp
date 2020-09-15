@@ -104,6 +104,12 @@ string TokenOfEnum(int Tok) {
         case TokenType::KW_CONST:
             return "const";
 
+        case TokenType::KW_CONSOLE:
+            return "console";
+
+        case TokenType::KW_LOG:
+            return "log";
+
         case TokenType::LBRACKET:
             return "lbracket";
 

@@ -9,15 +9,15 @@ int main() {
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
 
-    /*while (true) {
+    while (true) {
         Token token = lexer.getNextToken();
         token.print();
 
         if (token.type == E0F) {
             break;
         }
-    }*/
-    Parser parser(lexer);
+    }
+    /*Parser parser(lexer);
 
     unique_ptr<bool> fatalError(new bool(false));
 
@@ -28,7 +28,7 @@ int main() {
     if (*fatalError) {
         cout << endl << "Fix error plz" << endl;
         return 0;
-    }
+    }*/
 
     return 0;
 }

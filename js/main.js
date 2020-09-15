@@ -1,1 +1,1 @@
-const a = foo(3, 4);
+console.log('kst');

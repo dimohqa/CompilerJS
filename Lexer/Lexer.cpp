@@ -1,7 +1,7 @@
 #include "Lexer.h"
 
 int operLength = 49;
-int reservLength = 34;
+int reservLength = 36;
 
 Token Lexer::getNextToken() {
     int colStart;
