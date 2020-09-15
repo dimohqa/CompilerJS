@@ -20,10 +20,11 @@
 #include "AST/ReturnExprAST.h"
 #include "AST/StringExprAST.h"
 #include "AST/WhileAST.h"
+#include "AST/ConsoleLogExprAST.h"
 
 using namespace std;
 
-static std::map<char, int> BinopPrecedence;
+static std::map<string, int> BinopPrecedence;
 
 class Parser {
 private:
@@ -36,7 +37,7 @@ public:
         return currentToken = lexer.getNextToken();
     }
     unique_ptr<ExprAST> parse(unique_ptr<bool> &fatalError);
-    unique_ptr<ExprAST> parseVariable(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseVariable(TokenType type, unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> ParsePrimary(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseExpression(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseNumberExpression(unique_ptr<bool> &fatalError);
@@ -48,7 +49,8 @@ public:
     unique_ptr<ExprAST> parseIF(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseWhile(unique_ptr<bool> &fatalError);
     unique_ptr<ExprAST> parseReturn(unique_ptr<bool> &fatalError);
-    unique_ptr<ExprAST> parseID(unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseID(TokenType type, unique_ptr<bool> &fatalError);
+    unique_ptr<ExprAST> parseOutput(unique_ptr<bool> &fatalError);
     void parseUnary(Token token, bool ****fatalError);
 };
 

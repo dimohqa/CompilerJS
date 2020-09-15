@@ -7,16 +7,26 @@ void printError(string error, Token token) {
 }
 
 int GetTokPrecedence(Token token) {
-    BinopPrecedence['<'] = 10;
-    BinopPrecedence['+'] = 20;
-    BinopPrecedence['-'] = 20;
-    BinopPrecedence['*'] = 40;
+    BinopPrecedence["<"] = 10;
+    BinopPrecedence["=="] = 10;
+    BinopPrecedence["!="] = 10;
+    BinopPrecedence["!=="] = 10;
+    BinopPrecedence["==="] = 10;
+    BinopPrecedence[">"] = 10;
+    BinopPrecedence[">="] = 10;
+    BinopPrecedence["=<"] = 10;
+    BinopPrecedence["+"] = 50;
+    BinopPrecedence["-"] = 50;
+    BinopPrecedence["*"] = 60;
+    BinopPrecedence["/"] = 60;
+    BinopPrecedence["%"] = 60;
+    BinopPrecedence["="] = 100;
 
     const char op = token.lexeme[0];
     if (!isascii(op))
         return -1;
 
-    const int TokPrec = BinopPrecedence[op];
+    const int TokPrec = BinopPrecedence[token.lexeme];
     if (TokPrec <= 0) return -1;
     return TokPrec;
 }
@@ -28,12 +38,12 @@ unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
         return nullptr;
 
     getNextToken();
-    //currentToken.print();
+
     return parseBinOpRHS(0, move(LHS), fatalError);
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
-    //currentToken.print();
+
     switch (currentToken.type) {
         case NUMBER:
         case HEX_NUMBER:
@@ -43,7 +53,7 @@ unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
         case STRING:
             return parseStringExpression(fatalError);
         case ID:
-            return parseID(fatalError);
+            return parseID(UNKNOWN, fatalError);
         case LPAREN:
             return parseParenExpr(fatalError);
         case LBRACE: {
@@ -99,7 +109,7 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
 
         arrayExpression->pushExpression(move(expr));
     }
-    currentToken.print();
+
     return arrayExpression;
 }
 
@@ -149,7 +159,7 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
             case KW_VAR:
             case KW_LET:
             case KW_CONST:
-                body->push(parseVariable(fatalError));
+                body->push(parseVariable(currentToken.type, fatalError));
                 break;
             case KW_RETURN:
                 body->push(parseReturn(fatalError));
@@ -160,6 +170,11 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
             case KW_WHILE:
                 body->push(parseWhile(fatalError));
                 break;
+            case ID:
+                body->push(ParsePrimary(fatalError));
+                break;
+            case KW_CONSOLE:
+                body->push(parseOutput(fatalError));
             case SEMICOLON:
                 getNextToken();
                 break;
@@ -178,7 +193,34 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
     }
 }
 
-unique_ptr<ExprAST> Parser::parseID(unique_ptr<bool> &fatalError) {
+unique_ptr<ExprAST> Parser::parseOutput(unique_ptr<bool> &fatalError) {
+    getNextToken();
+
+    if (currentToken.type != DOT) {
+        fatalError.reset(new bool(true));
+
+        printError("Ошибка: ожидалась точка: ", currentToken);
+
+        return nullptr;
+    }
+
+    getNextToken();
+
+    if (currentToken.type != KW_LOG) {
+        fatalError.reset(new bool(true));
+
+        printError("Ошибка: ожидалось log: ", currentToken);
+
+        return nullptr;
+    }
+    getNextToken();
+    if (auto parenExpr = parseParenExpr(fatalError))
+        return make_unique<ConsoleLogExprAST>(move(parenExpr));
+
+    return nullptr;
+}
+
+unique_ptr<ExprAST> Parser::parseID(TokenType type, unique_ptr<bool> &fatalError) {
     if (currentToken.type != ID) {
         fatalError.reset(new bool(true));
 
@@ -190,8 +232,13 @@ unique_ptr<ExprAST> Parser::parseID(unique_ptr<bool> &fatalError) {
 
     getNextToken();
 
+
+
+    if (currentToken.type == EQUAL)
+        return parseBinOpRHS(0, make_unique<VariableExprAST>(name, type, nullptr), fatalError);
+
     if (currentToken.type != LPAREN)
-        return make_unique<VariableExprAST>(name, nullptr);
+        return make_unique<VariableExprAST>(name, type, nullptr);
 
     vector<unique_ptr<ExprAST>> Args;
     getNextToken();
@@ -249,17 +296,16 @@ unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
     return make_unique<WhileAST>(move(parenExpr), move(body));
 }
 
-unique_ptr<ExprAST> Parser::parseVariable(unique_ptr<bool> &fatalError) {
+unique_ptr<ExprAST> Parser::parseVariable(TokenType type, unique_ptr<bool> &fatalError) {
     getNextToken();
     //currentToken.print();
-    auto variable = parseID(fatalError);;
+    auto variable = parseID(type, fatalError);;
 
     //getNextToken();
     //currentToken.print();
     if (currentToken.type == EQUAL) {
         getNextToken();
         variable->setExpr(parseExpression(fatalError));
-
         return variable;
     }
 
