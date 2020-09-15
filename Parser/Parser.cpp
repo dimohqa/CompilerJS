@@ -192,8 +192,9 @@ unique_ptr<ExprAST> Parser::parseNumberExpression(unique_ptr<bool> &fatalError) 
 }
 
 unique_ptr<ExprAST> Parser::parseStringExpression(unique_ptr<bool> &fatalError) {
+    const string str = currentToken.lexeme;
     getNextToken();
-    return make_unique<StringExprAST>(currentToken.lexeme);
+    return make_unique<StringExprAST>(str);
 }
 
 unique_ptr<ExprAST> Parser::parseOutput(unique_ptr<bool> &fatalError) {

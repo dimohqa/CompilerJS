@@ -5,7 +5,7 @@
 #include "Parser/Parser.h"
 
 int main() {
-    string filepath = "/home/nitro/university/CompilerJS/js/chisl.js";
+    string filepath = "/home/nitro/university/CompilerJS/js/substr.js";
     ifstream file = ifstream(filepath);
     Lexer lexer(file);
 
