@@ -17,7 +17,20 @@ public:
     IfAST(unique_ptr<ExprAST> condition, unique_ptr<ExprAST> body)
         : Condition(move(condition)), Body(move(body)) {}
     void print(int level) override {
+        printLevel(level);
+        cout << "IF" << endl;
 
+        if(Condition.get()) {
+            printLevel(level + 1);
+            cout << "Condition:" << endl;
+            Condition.get()->print(level + 2);
+        }
+
+        if(Body.get()) {
+            printLevel(level + 1);
+            cout << "Body:" << endl;
+            Body.get()->print(level + 2);
+        }
     }
 };
 

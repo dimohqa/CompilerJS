@@ -9,10 +9,14 @@ private:
 public:
     ConsoleLogExprAST(unique_ptr<ExprAST> arg): Arg(move(arg)) {}
     void print(int level) {
+
         printLevel(level);
-        cout << "Arg = ";
-        Arg.get()->print(level);
-        cout << endl;
+        cout << "Console.log: " << endl;
+
+        printLevel(level + 1);
+        cout << "Arg:" << endl;
+
+        Arg.get()->print(level + 2);
     }
 };
 

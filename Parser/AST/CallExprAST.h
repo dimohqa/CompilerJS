@@ -17,7 +17,7 @@ public:
         : Callee(callee), Args(move(args)) {}
     void print(int level) override {
         printLevel(level);
-        cout << "Call = " << Callee << endl;
+        cout << "Call: " << Callee << endl;
     }
 };
 

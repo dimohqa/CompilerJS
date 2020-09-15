@@ -148,11 +148,13 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
         }
 
         auto expr = parseExpression(fatalError);
+        currentToken.print();
         if (!expr)
             return nullptr;
 
         arrayExpression->pushExpression(move(expr));
     }
+    currentToken.print();
     getNextToken();
     return arrayExpression;
 }
@@ -172,7 +174,7 @@ unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS,
         if (!RHS)
             return 0;
 
-        getNextToken();
+        //getNextToken();
 
         int nextPrec = GetTokPrecedence(currentToken);
         if (tokPrec < nextPrec) {
@@ -278,7 +280,6 @@ unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
     if (!parenExpr)
         return nullptr;
 
-    getNextToken(); // '{' ?????????????????????????
     auto body = parse(fatalError);
     if (!body)
         return nullptr;

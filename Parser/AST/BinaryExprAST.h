@@ -19,7 +19,6 @@ public:
         cout << "Operation: " << Op << endl;
         LHS.get()->print(level + 1);
         RHS.get()->print(level + 1);
-        cout << endl;
     }
 };
 
