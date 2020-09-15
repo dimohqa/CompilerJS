@@ -20,7 +20,6 @@ int GetTokPrecedence(Token token) {
     BinopPrecedence["*"] = 60;
     BinopPrecedence["/"] = 60;
     BinopPrecedence["%"] = 60;
-    BinopPrecedence["="] = 100;
 
     const char op = token.lexeme[0];
     if (!isascii(op))
@@ -31,19 +30,64 @@ int GetTokPrecedence(Token token) {
     return TokPrec;
 }
 
+unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
+    auto body = make_unique<BodyAST>();
+
+    getNextToken();
+
+    while (true) {
+        switch (currentToken.type) {
+            case KW_VAR:
+            case KW_LET:
+            case KW_CONST:
+                getNextToken();
+                body->push(parseVariable(currentToken.type, fatalError));
+                break;
+            case KW_RETURN:
+                body->push(parseReturn(fatalError));
+                break;
+            case KW_IF:
+                body->push(parseIF(fatalError));
+                break;
+            case KW_WHILE:
+                body->push(parseWhile(fatalError));
+                break;
+            case ID:
+                body->push(parseVariable(UNKNOWN, fatalError));
+                break;
+            case KW_CONSOLE:
+                body->push(parseOutput(fatalError));
+            case SEMICOLON:
+                getNextToken();
+                break;
+            case RBRACKET:
+                return body;
+            case E0F: {
+                auto proto = make_unique<PrototypeAST>("main", vector<string>());
+                return make_unique<FunctionAST>(move(proto), move(body));
+            }
+            default:
+                fatalError.reset(new bool(true));
+                printError("Неподдерживаемый токен: ", currentToken);
+                getNextToken();
+                break;
+        }
+    }
+}
+
+
 unique_ptr<ExprAST> Parser::parseExpression(unique_ptr<bool> &fatalError) {
     auto LHS = ParsePrimary(fatalError);
 
     if (!LHS)
         return nullptr;
 
-    getNextToken();
-
+    //getNextToken();
+    //currentToken.print();
     return parseBinOpRHS(0, move(LHS), fatalError);
 }
 
 unique_ptr<ExprAST> Parser::ParsePrimary(unique_ptr<bool> &fatalError) {
-
     switch (currentToken.type) {
         case NUMBER:
         case HEX_NUMBER:
@@ -86,7 +130,7 @@ unique_ptr<ExprAST> Parser::parseParenExpr(unique_ptr<bool> &fatalError) {
         printError("Ожидалось закрытая скобка: ", currentToken);
         fatalError.reset(new bool(true));
     }
-
+    getNextToken();
     return expr;
 }
 
@@ -109,7 +153,7 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
 
         arrayExpression->pushExpression(move(expr));
     }
-
+    getNextToken();
     return arrayExpression;
 }
 
@@ -143,54 +187,13 @@ unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS,
 
 unique_ptr<ExprAST> Parser::parseNumberExpression(unique_ptr<bool> &fatalError) {
     const double number = stod(currentToken.lexeme);
-
+    getNextToken();
     return make_unique<NumberExprAST>(number);
 }
 
 unique_ptr<ExprAST> Parser::parseStringExpression(unique_ptr<bool> &fatalError) {
-        return make_unique<StringExprAST>(currentToken.lexeme);
-}
-
-unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
-    auto body = make_unique<BodyAST>();
     getNextToken();
-    while (true) {
-        switch (currentToken.type) {
-            case KW_VAR:
-            case KW_LET:
-            case KW_CONST:
-                body->push(parseVariable(currentToken.type, fatalError));
-                break;
-            case KW_RETURN:
-                body->push(parseReturn(fatalError));
-                break;
-            case KW_IF:
-                body->push(parseIF(fatalError));
-                break;
-            case KW_WHILE:
-                body->push(parseWhile(fatalError));
-                break;
-            case ID:
-                body->push(ParsePrimary(fatalError));
-                break;
-            case KW_CONSOLE:
-                body->push(parseOutput(fatalError));
-            case SEMICOLON:
-                getNextToken();
-                break;
-            case RBRACKET:
-                return body;
-            case E0F: {
-                auto proto = make_unique<PrototypeAST>("main", vector<string>());
-                return make_unique<FunctionAST>(move(proto), move(body));
-            }
-            default:
-                fatalError.reset(new bool(true));
-                printError("Неподдерживаемый токен: ", currentToken);
-                getNextToken();
-                break;
-        }
-    }
+    return make_unique<StringExprAST>(currentToken.lexeme);
 }
 
 unique_ptr<ExprAST> Parser::parseOutput(unique_ptr<bool> &fatalError) {
@@ -232,32 +235,32 @@ unique_ptr<ExprAST> Parser::parseID(TokenType type, unique_ptr<bool> &fatalError
 
     getNextToken();
 
+    auto id = make_unique<VariableExprAST>(name, type, nullptr);
 
+    //Дописывал позднее
+    if (currentToken.type == LBRACE) {
+        getNextToken();
 
-    if (currentToken.type == EQUAL)
-        return parseBinOpRHS(0, make_unique<VariableExprAST>(name, type, nullptr), fatalError);
-
-    if (currentToken.type != LPAREN)
-        return make_unique<VariableExprAST>(name, type, nullptr);
-
-    vector<unique_ptr<ExprAST>> Args;
-    getNextToken();
-    while (true) {
-        if (currentToken.type == RPAREN)
-            break;
-        if (currentToken.type == COMMA) {
-            getNextToken();
-            continue;
-        }
-
-        if (auto Arg = parseExpression(fatalError)) {
-            Args.push_back(move(Arg));
-        } else {
+        if (currentToken.type != NUMBER) {
+            fatalError.reset(new bool(true));
+            printError("Ошибка: Неккоретный индекс обращения к массиву: ", currentToken);
             return nullptr;
         }
+
+        auto index = parseNumberExpression(fatalError);
+
+        if (currentToken.type != RBRACE) {
+            fatalError.reset(new bool(true));
+            printError("Ошибка: ожидалась ']': ", currentToken);
+            return nullptr;
+        }
+
+        getNextToken();
+
+        return make_unique<VariableArrayExprAST>(move(id), move(index));
     }
 
-    return make_unique<CallExprAST>(name, move(Args));
+    return id;
 }
 
 unique_ptr<ExprAST> Parser::parseReturn(unique_ptr<bool> &fatalError) {
@@ -274,7 +277,7 @@ unique_ptr<ExprAST> Parser::parseIF(unique_ptr<bool> &fatalError) {
     if (!parenExpr)
         return nullptr;
 
-    getNextToken(); // '{'
+    getNextToken(); // '{' ?????????????????????????
     auto body = parse(fatalError);
     if (!body)
         return nullptr;
@@ -288,7 +291,6 @@ unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
     if (!parenExpr)
         return nullptr;
 
-    getNextToken(); // '{'
     auto body = parse(fatalError);
     if (!body)
         return nullptr;
@@ -297,14 +299,13 @@ unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
 }
 
 unique_ptr<ExprAST> Parser::parseVariable(TokenType type, unique_ptr<bool> &fatalError) {
-    getNextToken();
-    //currentToken.print();
     auto variable = parseID(type, fatalError);;
 
     //getNextToken();
-    //currentToken.print();
+
     if (currentToken.type == EQUAL) {
         getNextToken();
+
         variable->setExpr(parseExpression(fatalError));
         return variable;
     }

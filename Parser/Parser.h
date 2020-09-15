@@ -21,6 +21,7 @@
 #include "AST/StringExprAST.h"
 #include "AST/WhileAST.h"
 #include "AST/ConsoleLogExprAST.h"
+#include "AST/VariableArrayExprAST.h"
 
 using namespace std;
 

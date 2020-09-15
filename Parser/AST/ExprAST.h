@@ -23,7 +23,7 @@ public:
         }
     }
     virtual void print(int level) {
-        std::cout << "lel" << std::endl;
+        cout << "Base class" << std::endl;
     };
 };
 

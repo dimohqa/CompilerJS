@@ -18,12 +18,12 @@ public:
     void pushExpression(unique_ptr<ExprAST> element);
     void print(int level) override {
         printLevel(level);
-        cout << "Array = [";
+        cout << "Array:";
         for (int i = 0; i < Elements.size(); i++) {
-            Elements[i].get()->print(level);
-            cout << ", ";
+            cout << endl;
+            Elements[i].get()->print(level + 1);
         }
-        cout << "]" << endl;
+        cout << endl;
     }
 };
 
