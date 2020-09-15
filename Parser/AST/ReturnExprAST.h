@@ -14,6 +14,14 @@ private:
 public:
     ReturnExprAST(unique_ptr<ExprAST> returnValue)
         : ReturnValue(move(returnValue)) {}
+    void print(int level) override {
+        printLevel(level);
+        cout << "Return:" << endl;
+
+        if (ReturnValue.get()) {
+            ReturnValue.get()->print(level + 1);
+        }
+    }
 };
 
 

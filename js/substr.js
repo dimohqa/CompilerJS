@@ -8,4 +8,6 @@ if (1) {
     let a = str + check;
     b = 3 + 4 * 7 - (4 + 5);
     console.log(123);
+
+    return 10 + "string";
 }
