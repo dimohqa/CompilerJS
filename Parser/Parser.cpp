@@ -148,13 +148,13 @@ unique_ptr<ExprAST> Parser::parseBraceExpr(unique_ptr<bool> &fatalError) {
         }
 
         auto expr = parseExpression(fatalError);
-        currentToken.print();
+        //currentToken.print();
         if (!expr)
             return nullptr;
 
         arrayExpression->pushExpression(move(expr));
     }
-    currentToken.print();
+    //currentToken.print();
     getNextToken();
     return arrayExpression;
 }
