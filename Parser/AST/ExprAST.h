@@ -26,7 +26,7 @@ public:
     virtual void print(int level) {
         cout << "Base class" << std::endl;
     };
-    virtual void table(Table &table) {
+    virtual void table(Table &table, int level) {
         //cout << "base table" << endl;
     }
     virtual Table createTable() {};

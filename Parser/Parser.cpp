@@ -39,10 +39,12 @@ unique_ptr<ExprAST> Parser::parse(unique_ptr<bool> &fatalError) {
         switch (currentToken.type) {
             case KW_VAR:
             case KW_LET:
-            case KW_CONST:
+            case KW_CONST: {
+                auto type = currentToken.type;
                 getNextToken();
-                body->push(parseVariable(currentToken.type, fatalError));
+                body->push(parseVariable(type, fatalError));
                 break;
+            }
             case KW_RETURN:
                 body->push(parseReturn(fatalError));
                 break;

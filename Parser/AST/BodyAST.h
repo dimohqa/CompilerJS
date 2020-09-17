@@ -25,9 +25,9 @@ public:
         }
     }
 
-    void table(Table &table) override {
+    void table(Table &table, int level) override {
         for (int i = 0; i < Child.size(); i++) {
-            Child[i].get()->table(table);
+            Child[i].get()->table(table, level + 1);
         }
     }
 };

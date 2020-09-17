@@ -2,6 +2,7 @@
 #define COMPILATOR_VARIABLEEXPRAST_H
 
 #include "ExprAST.h"
+#include "../../../EnumSwitch/TokenTypeSwitch.h"
 #include "../../Lexer/Token.h"
 #include <memory>
 #include <string>
@@ -28,8 +29,10 @@ public:
             Expr.get()->print(level + 1);
     }
 
-    void table(Table &table) override {
-        Identifier identifier(Name, 0);
+    void table(Table &table, int level) override {
+        bool vol = Type == KW_CONST;
+        //cout << "TYPE = " << TokenOfEnum(Type) << " " << vol << endl;
+        Identifier identifier(Name, level, vol);
         table.push(identifier);
     }
 };

@@ -31,9 +31,9 @@ public:
         }
     }
 
-    void table(Table &table) override {
+    void table(Table &table, int level) override {
         if (Body.get())
-            Body.get()->table(table);
+            Body.get()->table(table, level);
     }
 };
 

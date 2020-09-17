@@ -16,7 +16,7 @@ public:
     bool push(Identifier identifier) {
         pair<string, Identifier> pairId(identifier.getName(), identifier);
 
-        auto rangeId = table.equal_range(identifier.getName());
+        auto rangeId = table.equal_range(pairId.first);
         for (auto it = rangeId.first; it != rangeId.second; it++) {
             if (identifier.getLevel() == it->second.getLevel()) {
                 cout << "Ошибка: Повторное объявление переменной, удалите переменную: " << identifier.getName() << endl;
@@ -26,6 +26,11 @@ public:
 
         table.insert(pairId);
         return true;
+    }
+    bool find(Identifier identifier) {
+        pair<string, Identifier> pairId(identifier.getName(), identifier);
+
+        table.find(pairId.first);
     }
     void print() {
         for (auto& item: table) {

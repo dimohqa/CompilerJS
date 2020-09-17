@@ -30,7 +30,7 @@ public:
     Table createTable() override {
         Table table;
         if (Body.get())
-            Body.get()->table(table);
+            Body.get()->table(table, 0);
 
         return table;
     }
