@@ -299,6 +299,8 @@ unique_ptr<ExprAST> Parser::parseWhile(unique_ptr<bool> &fatalError) {
     if (!body)
         return nullptr;
 
+    getNextToken();
+
     return make_unique<WhileAST>(move(parenExpr), move(body));
 }
 
