@@ -27,10 +27,10 @@ public:
         Body.get()->print(level + 1);
     }
 
-    Table createTable() override {
+    Table createTable(unique_ptr<bool> &fatalError) override {
         Table table;
         if (Body.get())
-            Body.get()->table(table, 0);
+            Body.get()->table(table, 0, fatalError);
 
         return table;
     }

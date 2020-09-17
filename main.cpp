@@ -25,11 +25,6 @@ int main() {
     cout << "TREE: " << endl;
     main.get()->print(0);
 
-    if (*fatalError) {
-        cout << endl << "Fix error plz" << endl;
-        return 0;
-    }
-
     cout << "TABLE: " << endl;
     /*Table table;
     Identifier identifier("a", 0);
@@ -37,7 +32,12 @@ int main() {
     table.push(identifier);
     //table.push(identifier2);
     table.print();*/
-    auto table = main.get()->createTable();
+    auto table = main.get()->createTable(fatalError);
     table.print();
+
+    if (*fatalError) {
+        cout << endl << "Fix error plz" << endl;
+        return 0;
+    }
     return 0;
 }

@@ -31,9 +31,9 @@ public:
         }
     }
 
-    void table(Table &table, int level) override {
+    void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
         if (Body.get())
-            Body.get()->table(table, level);
+            Body.get()->table(table, level, fatalError);
     }
 };
 

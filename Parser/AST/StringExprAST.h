@@ -13,6 +13,12 @@ public:
         printLevel(level);
         cout << "String: " << Value << endl;
     }
+    IdentifierType getType(unique_ptr<bool> &fatalError) override {
+        return STR;
+    }
+    int getLength(unique_ptr<bool> &fatalError) override {
+        return Value.length();
+    }
 };
 
 

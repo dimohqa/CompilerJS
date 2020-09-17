@@ -29,10 +29,15 @@ public:
             Expr.get()->print(level + 1);
     }
 
-    void table(Table &table, int level) override {
-        bool vol = Type == KW_CONST;
-        //cout << "TYPE = " << TokenOfEnum(Type) << " " << vol << endl;
-        Identifier identifier(Name, level, vol);
+    void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
+        if (Type == KW_CONST && !Expr.get()) {
+            cout << "Ошибка: const обязательно нужно инициализировать" << endl;
+        }
+        IdentifierType type = Expr.get() ? Expr.get()->getType(fatalError) : UND;
+        int length = type == STR ? Expr.get()->getLength(fatalError) : 1;
+
+
+        Identifier identifier(Name, level, Type == KW_CONST, type, length);
         table.push(identifier);
     }
 };

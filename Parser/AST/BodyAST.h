@@ -25,9 +25,9 @@ public:
         }
     }
 
-    void table(Table &table, int level) override {
+    void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
         for (int i = 0; i < Child.size(); i++) {
-            Child[i].get()->table(table, level + 1);
+            Child[i].get()->table(table, level + 1, fatalError);
         }
     }
 };

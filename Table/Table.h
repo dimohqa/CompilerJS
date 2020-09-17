@@ -17,10 +17,20 @@ public:
         pair<string, Identifier> pairId(identifier.getName(), identifier);
 
         auto rangeId = table.equal_range(pairId.first);
-        for (auto it = rangeId.first; it != rangeId.second; it++) {
+        for (auto it = rangeId.first; it != rangeId.second; ++it) {
             if (identifier.getLevel() == it->second.getLevel()) {
                 cout << "Ошибка: Повторное объявление переменной, удалите переменную: " << identifier.getName() << endl;
                 return false;
+            }
+            if (identifier.getLevel() >= it->second.getLevel()) {
+                if (it->second.getVolatile() == true) {
+                    cout << "Ошибка: Нельзя изменить переменную const: " << identifier.getName() << endl;
+                    return false;
+                }
+
+                it->second.changeType(identifier.getType());
+
+                return true;
             }
         }
 
