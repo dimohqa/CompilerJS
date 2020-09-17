@@ -1,4 +1,6 @@
 #include "gtest/gtest.h"
+#include "../../Lexer/Lexer.h"
+#include "../Parser.h"
 #include <iostream>
 #include <string>
 
@@ -23,6 +25,7 @@ TEST(TestParser, oneOpPlus) {
 
     unique_ptr<bool> fatalError(new bool(false));
     parser.parse(fatalError);
+    //executable_file
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }*/
