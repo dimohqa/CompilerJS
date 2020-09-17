@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "../../Table/Table.h"
 
 using namespace std;
 
@@ -25,6 +26,10 @@ public:
     virtual void print(int level) {
         cout << "Base class" << std::endl;
     };
+    //virtual Table table(Table &table) {
+    //    cout << "base table" << endl;
+    //}
+    //virtual Table createTable() = 0;
 };
 
 

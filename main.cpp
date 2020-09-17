@@ -35,7 +35,7 @@ int main() {
     Identifier identifier("a", 0);
     Identifier identifier2("a", 0);
     table.push(identifier);
-    table.push(identifier2);
+    //table.push(identifier2);
     table.print();
     return 0;
 }

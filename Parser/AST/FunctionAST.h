@@ -21,10 +21,18 @@ public:
         return move(Body);
     }
     void print(int level) {
-        printLevel(level);
-        cout << "Proto" << endl;
+        //printLevel(level);
+        //cout << "Proto" << endl;
+        Proto.get()->print(level + 1);
         Body.get()->print(level + 1);
     }
+
+    /*Table createTable() override {
+        Table table;
+        Body.get()->table(table);
+
+        return table;
+    }*/
 };
 
 
