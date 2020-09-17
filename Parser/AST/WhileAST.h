@@ -14,9 +14,11 @@ public:
     void print(int level) override {
         printLevel(level);
         cout << "While" << endl;
-        printLevel(level + 1);
+
         if (Condition.get())
-            Condition.get()->print(level + 1);
+            printLevel(level + 1);
+            cout << "Condition:" << endl;
+            Condition.get()->print(level + 2);
         if (Body.get())
             Body.get()->print(level + 1);
     }

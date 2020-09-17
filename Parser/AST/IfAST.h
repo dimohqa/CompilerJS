@@ -27,9 +27,7 @@ public:
         }
 
         if(Body.get()) {
-            printLevel(level + 1);
-            cout << "Body:" << endl;
-            Body.get()->print(level + 2);
+            Body.get()->print(level + 1);
         }
     }
 };

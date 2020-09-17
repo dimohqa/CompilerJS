@@ -18,6 +18,8 @@ public:
         Child.push_back(move(child));
     }
     void print(int level) override {
+        printLevel(level);
+        cout << "Body" << endl;
         for (int i = 0; i < Child.size(); ++i) {
             Child[i].get()->print(level + 1);
         }
