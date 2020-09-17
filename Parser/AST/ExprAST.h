@@ -26,10 +26,10 @@ public:
     virtual void print(int level) {
         cout << "Base class" << std::endl;
     };
-    //virtual Table table(Table &table) {
-    //    cout << "base table" << endl;
-    //}
-    //virtual Table createTable() = 0;
+    virtual void table(Table &table) {
+        //cout << "base table" << endl;
+    }
+    virtual Table createTable() {};
 };
 
 

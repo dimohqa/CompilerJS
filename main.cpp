@@ -31,11 +31,13 @@ int main() {
     }
 
     cout << "TABLE: " << endl;
-    Table table;
+    /*Table table;
     Identifier identifier("a", 0);
     Identifier identifier2("a", 0);
     table.push(identifier);
     //table.push(identifier2);
+    table.print();*/
+    auto table = main.get()->createTable();
     table.print();
     return 0;
 }

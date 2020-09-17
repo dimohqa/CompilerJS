@@ -30,6 +30,11 @@ public:
             Body.get()->print(level + 1);
         }
     }
+
+    void table(Table &table) override {
+        if (Body.get())
+            Body.get()->table(table);
+    }
 };
 
 

@@ -27,12 +27,13 @@ public:
         Body.get()->print(level + 1);
     }
 
-    /*Table createTable() override {
+    Table createTable() override {
         Table table;
-        Body.get()->table(table);
+        if (Body.get())
+            Body.get()->table(table);
 
         return table;
-    }*/
+    }
 };
 
 

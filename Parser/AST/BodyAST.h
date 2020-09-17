@@ -24,6 +24,12 @@ public:
             Child[i].get()->print(level + 1);
         }
     }
+
+    void table(Table &table) override {
+        for (int i = 0; i < Child.size(); i++) {
+            Child[i].get()->table(table);
+        }
+    }
 };
 
 

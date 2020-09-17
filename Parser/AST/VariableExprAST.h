@@ -27,6 +27,11 @@ public:
         if (Expr.get())
             Expr.get()->print(level + 1);
     }
+
+    void table(Table &table) override {
+        Identifier identifier(Name, 0);
+        table.push(identifier);
+    }
 };
 
 
