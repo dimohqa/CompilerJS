@@ -2,6 +2,7 @@
 #include <memory>
 #include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
+#include "Table/Table.h"
 
 int main() {
     string filepath = "/home/nitro/university/CompilerJS/js/min.js";
@@ -29,5 +30,12 @@ int main() {
         return 0;
     }
 
+    cout << "TABLE: " << endl;
+    Table table;
+    Identifier identifier("a", 0);
+    Identifier identifier2("a", 0);
+    table.push(identifier);
+    table.push(identifier2);
+    table.print();
     return 0;
 }

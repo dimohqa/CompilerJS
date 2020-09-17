@@ -7,9 +7,9 @@
 using namespace std;
 
 enum IdentifierType {
-    NUMBER,
-    STRING,
-    ARRAY,
+    NUM = 1,
+    STR = 2,
+    ARR = 3,
 };
 
 class Identifier {
@@ -28,7 +28,7 @@ class Identifier {
     int Offset;
 
 public:
-    Identifier() {}
+    Identifier(string name, int level): Name(name), Level(level) {}
     string getName() {
         return Name;
     }
@@ -37,13 +37,13 @@ public:
     }
     void printIdentifier() {
         switch (Type) {
-            case NUMBER:
+            case NUM:
                 cout << "NUMBER";
                 break;
-            case STRING:
+            case STR:
                 cout << "STRING";
                 break;
-            case ARRAY:
+            case ARR:
                 cout << "ARRAY";
                 break;
             default:
@@ -52,10 +52,10 @@ public:
         }
     }
     void print() {
-        cout << '\t' << "Volatile: " << Volatile << endl;
+        //cout << '\t' << "Volatile: " << Volatile << endl;
         cout << '\t' << "Level: " << Level << endl;
-        cout << '\t' << "SizeByte: " << SizeBite << endl;
-        cout << '\t' << "IdentifierType: "; printIdentifier(); cout << endl;
+        //cout << '\t' << "SizeByte: " << SizeBite << endl;
+        //cout << '\t' << "IdentifierType: "; printIdentifier(); cout << endl;
     }
 };
 

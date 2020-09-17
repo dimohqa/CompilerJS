@@ -18,8 +18,8 @@ public:
 
         auto rangeId = table.equal_range(identifier.getName());
         for (auto it = rangeId.first; it != rangeId.second; it++) {
-            cout << it->first << endl;
             if (identifier.getLevel() == it->second.getLevel()) {
+                cout << "Ошибка: Повторное объявление переменной, удалите переменную: " << identifier.getName() << endl;
                 return false;
             }
         }
