@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <fstream>
+#include "../../Lexer/Lexer.h"
 #include "../../Table/Table.h"
 
 using namespace std;
@@ -36,7 +38,14 @@ public:
     virtual IdentifierType getType(unique_ptr<bool> &fatalError) {
         return UND;
     }
+
     virtual int getLength(unique_ptr<bool> &fatalError) {}
+
+    virtual string getName() {}
+
+    virtual void codegenInit(Table table) {}
+
+    virtual void codegen(ofstream &out, Table table) {}
 };
 
 

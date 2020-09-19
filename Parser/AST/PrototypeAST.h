@@ -15,6 +15,7 @@ private:
 public:
     PrototypeAST(const string &name, const vector<string> &args)
         : Name(name), Args(move(args)) {}
+
     void print(int level) override {
         printLevel(level);
         cout << "Prototype: " << Name << endl;

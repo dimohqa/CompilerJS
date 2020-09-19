@@ -29,6 +29,10 @@ public:
             Expr.get()->print(level + 1);
     }
 
+    string getName() override {
+        return Name;
+    }
+
     void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
         if (Type == KW_CONST && !Expr.get()) {
             cout << "Ошибка: const обязательно нужно инициализировать" << endl;
@@ -43,6 +47,16 @@ public:
 
         Identifier identifier(Name, level, Type == KW_CONST, type, length);
         table.push(identifier);
+    }
+
+    void codegen(ofstream &out, Table table) override {
+        auto id = table.table.find(Name);
+
+        if (id != table.table.end()) {
+            out << '\t' << "movl ";
+            Expr.get()->codegen(out, table);
+            out << ", " << Name << endl;
+        }
     }
 };
 

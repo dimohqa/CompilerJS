@@ -18,6 +18,11 @@ public:
 
         Arg.get()->print(level + 2);
     }
+    void codegen(ofstream &out, Table table) {
+            out << '\t' << "pushl "; out << Arg.get()->getName() << endl;
+            out << '\t' << "pushl $printf_format" << endl;
+            out << '\t' << "call printf" << endl;
+    }
 };
 
 

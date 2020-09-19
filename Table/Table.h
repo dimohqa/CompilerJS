@@ -10,9 +10,10 @@ using namespace std;
 
 class Table {
 private:
-    unordered_multimap<string, Identifier> table;
 
 public:
+    unordered_multimap<string, Identifier> table;
+
     bool push(Identifier identifier) {
         pair<string, Identifier> pairId(identifier.getName(), identifier);
 
@@ -37,11 +38,13 @@ public:
         table.insert(pairId);
         return true;
     }
+
     bool find(Identifier identifier) {
         pair<string, Identifier> pairId(identifier.getName(), identifier);
 
         table.find(pairId.first);
     }
+
     void print() {
         for (auto& item: table) {
             cout << "Identifier: " << item.first << endl;

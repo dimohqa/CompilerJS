@@ -30,6 +30,12 @@ public:
             Child[i].get()->table(table, level + 1, fatalError);
         }
     }
+
+    void codegen(ofstream &out, Table table) override {
+        for (int i = 0; i < Child.size(); i++) {
+            Child[i].get()->codegen(out, table);
+        }
+    }
 };
 
 

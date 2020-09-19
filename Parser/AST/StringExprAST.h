@@ -9,6 +9,7 @@ private:
 
 public:
     StringExprAST(string value): Value(value) {}
+
     void print(int level) override {
         printLevel(level);
         cout << "String: " << Value << endl;

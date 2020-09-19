@@ -16,8 +16,13 @@ public:
         printLevel(level);
         cout << "Number: " << Value << endl;
     }
+
     IdentifierType getType(unique_ptr<bool> &fatalError) override {
         return NUM;
+    }
+
+    void codegen(ofstream &out, Table table) override {
+        out << "$" << Value;
     }
 };
 

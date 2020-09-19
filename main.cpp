@@ -39,5 +39,8 @@ int main() {
         cout << endl << "Fix error plz" << endl;
         return 0;
     }
+
+    main.get()->codegenInit(table);
+
     return 0;
 }

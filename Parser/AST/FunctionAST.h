@@ -34,6 +34,31 @@ public:
 
         return table;
     }
+
+    void codegenInit(Table table) override {
+        ofstream out("codegen.s");
+        for (auto id = table.table.begin(); id != table.table.end(); id++) {
+            out << ".bss" << endl;
+            out << id->first << ":" << endl;
+            out << '\t' << ".space " << id->second.getSizeByte() << endl;
+        }
+        out << ".data" << endl;
+        out << "printf_format:" << endl;
+        out << '\t' << ".string \"%d\\n\"" << endl;
+        out << ".text" << endl;
+        out << ".globl main" << endl;
+        out << ".type main, @function" << endl;
+        out << endl << "main:" << endl;
+        out << '\t' << "pushl %ebp" << endl;
+        out << '\t' << "movl %esp, %ebp" << endl << endl;
+
+        if (Body.get())
+            Body.get()->codegen(out, table);
+
+        out << endl << '\t' << "movl $0, %eax" << endl;
+        out << '\t' << "leave" << endl;
+        out << '\t' << "ret" << endl;
+    }
 };
 
 

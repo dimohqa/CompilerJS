@@ -11,6 +11,7 @@ enum IdentifierType {
     STR = 2,
     ARR = 3,
     UND = 4,
+    IDE = 5,
 };
 
 class Identifier {
@@ -48,9 +49,15 @@ public:
     string getName() {
         return Name;
     }
+
     int getLevel() {
         return Level;
     }
+
+    int getSizeByte() {
+        return SizeByte;
+    }
+
     void printIdentifier() {
         switch (Type) {
             case NUM:
