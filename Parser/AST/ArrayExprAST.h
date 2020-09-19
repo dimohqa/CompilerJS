@@ -23,6 +23,14 @@ public:
             Elements[i].get()->print(level + 1);
         }
     }
+
+    IdentifierType getType(unique_ptr<bool> &fatalError) override {
+        return ARR;
+    }
+
+    int getLength(unique_ptr<bool> &fatalError) override {
+        return Elements.size();
+    }
 };
 
 

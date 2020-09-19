@@ -34,8 +34,12 @@ public:
             cout << "Ошибка: const обязательно нужно инициализировать" << endl;
         }
         IdentifierType type = Expr.get() ? Expr.get()->getType(fatalError) : UND;
-        int length = type == STR ? Expr.get()->getLength(fatalError) : 1;
 
+        int length;
+        if (type == STR || type == ARR)
+            length = Expr.get()->getLength(fatalError);
+        else
+            length = 1;
 
         Identifier identifier(Name, level, Type == KW_CONST, type, length);
         table.push(identifier);

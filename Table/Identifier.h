@@ -16,11 +16,11 @@ enum IdentifierType {
 class Identifier {
     string Name; // +
     bool Volatile; // +
-    int SizeByte; // +- array not working
-    int SizeBite; // +- array not working
+    int SizeByte; // +
+    int SizeBite; // +
     int Level; // +
     IdentifierType Type; // +
-    int AmountOfElements; // +- array not working
+    int AmountOfElements; // +
     string Register; // ???
     int Offset; // +- array not working
 

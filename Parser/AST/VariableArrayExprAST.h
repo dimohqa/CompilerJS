@@ -12,6 +12,7 @@ private:
 public:
     VariableArrayExprAST(unique_ptr<ExprAST> variable, unique_ptr<ExprAST> index)
         : Variable(move(variable)), Index(move(index)) {}
+
     void print(int level) override {
         printLevel(level);
         cout << "CallArray: " << endl;
