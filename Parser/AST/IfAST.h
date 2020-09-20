@@ -39,6 +39,14 @@ public:
 
     void codegen(ofstream &out, Table table) override {
         Condition->codegen(out, table);
+        if (!Condition->isBinary()) {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "cmpl $0, %eax" << endl;
+            out << '\t' << "jne notEqual" << metks["notEqual"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "notEqual" << metks["notEqual"] << ":"  << endl;
+            metks["notEqual"]++;
+        }
         Body->codegen(out, table);
         out << "next" << metks["next"] << ":" << endl;
         metks["next"]++;

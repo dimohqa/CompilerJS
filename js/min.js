@@ -1,4 +1,4 @@
-let num = 3;
-if (4 > num + 2) {
-    console.log(num);
+let num = 5;
+while (num > 3) {
+    num = num - 1;
 }
