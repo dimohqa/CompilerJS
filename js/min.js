@@ -1,2 +1,2 @@
-let num = 10 + 5 + 2;
+let num = 10 - 3;
 console.log(num);

@@ -58,6 +58,30 @@ public:
             case '+': {
                 out << '\t' << "popl " << "%eax" << endl;
                 out << '\t' << "addl " << "%eax, " << "(%esp)" << endl;
+                break;
+            }
+            case '-': {
+                out << '\t' << "popl " << "%ebx" << endl;
+                out << '\t' << "popl " << "%eax" << endl;
+                out << '\t' << "subl " << "%ebx, %eax" << endl;
+                out << '\t' << "pushl " << "%eax" << endl;
+                break;
+            }
+            case '*': {
+                out << '\t' << "popl " << "%eax" << endl;
+                out << '\t' << "popl " << "%ebx" << endl;
+                out << '\t' << "imull " << "%ebx" << endl;
+                out << '\t' << "pushl " << "%eax" << endl;
+                break;
+            }
+            case '/': {
+                out << '\t' << "popl " << "%ebx" << endl;
+                out << '\t' << "popl " << "%eax" << endl;
+                out << '\t' << "pushl %eax" << endl;
+                out << '\t' << "movl $0, %edx" << endl;
+                out << '\t' << "idivl " << "%ebx" << endl;
+                out << '\t' << "pushl " << "%eax" << endl;
+                break;
             }
         }
     }
