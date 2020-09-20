@@ -43,9 +43,19 @@ public:
 
     virtual string getName() {}
 
+    virtual string getNameClass() {}
+
+    virtual bool isBinary() {
+        return false;
+    }
+
     virtual void codegenInit(Table table) {}
 
     virtual void codegen(ofstream &out, Table table) {}
+
+    virtual double codegenNum() {}
+
+    double codegenBin(ofstream &out, Table table) {}
 };
 
 

@@ -33,19 +33,23 @@ public:
         return Name;
     }
 
+    string getNameClass() override {
+        return "Variable";
+    }
+
     void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
         if (Type == KW_CONST && !Expr.get()) {
             cout << "Ошибка: const обязательно нужно инициализировать" << endl;
         }
         IdentifierType type = Expr.get() ? Expr.get()->getType(fatalError) : UND;
-
+        bool binary = Expr.get()->isBinary();
         int length;
         if (type == STR || type == ARR)
             length = Expr.get()->getLength(fatalError);
         else
             length = 1;
 
-        Identifier identifier(Name, level, Type == KW_CONST, type, length);
+        Identifier identifier(Name, level, Type == KW_CONST, type, length, binary);
         table.push(identifier);
     }
 
@@ -53,9 +57,14 @@ public:
         auto id = table.table.find(Name);
 
         if (id != table.table.end()) {
-            out << '\t' << "movl ";
-            Expr.get()->codegen(out, table);
-            out << ", " << Name << endl;
+            if (!id->second.getBinary()) {
+                out << '\t' << "movl ";
+                Expr.get()->codegen(out, table);
+                out << ", " << Name << endl;
+            } else {
+                Expr.get()->codegen(out, table);
+                out << '\t' << "popl " << Name << endl;
+            }
         }
     }
 };

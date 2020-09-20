@@ -10,8 +10,9 @@ enum IdentifierType {
     NUM = 1,
     STR = 2,
     ARR = 3,
-    UND = 4,
-    IDE = 5,
+    BINARY = 4,
+    UND = 5,
+    IDE = 6,
 };
 
 class Identifier {
@@ -21,13 +22,14 @@ class Identifier {
     int SizeBite; // +
     int Level; // +
     IdentifierType Type; // +
+    bool Binary;
     int AmountOfElements; // +
     string Register; // ???
     int Offset; // +- array not working
 
 public:
-    Identifier(string name, int level, bool vol, IdentifierType type, int length)
-        : Name(name), Level(level), Volatile(vol), Type(type), AmountOfElements(length) {
+    Identifier(string name, int level, bool vol, IdentifierType type, int length, bool binary)
+        : Name(name), Level(level), Volatile(vol), Type(type), AmountOfElements(length), Binary(binary) {
         switch (type) {
             case NUM:
                 SizeByte = 4;
@@ -90,6 +92,10 @@ public:
         return Volatile;
     }
 
+    bool getBinary() {
+        return Binary;
+    }
+
     void print() {
         cout << '\t' << "Volatile: " << Volatile << endl;
         cout << '\t' << "Level: " << Level << endl;
@@ -97,6 +103,7 @@ public:
         cout << '\t' << "AmountOfElements: " << AmountOfElements << endl;
         cout << '\t' << "SizeByte: " << SizeByte << endl;
         cout << '\t' << "SizeBite: " << SizeBite << endl;
+        cout << '\t' << "Binary: " << Binary << endl;
     }
 };
 

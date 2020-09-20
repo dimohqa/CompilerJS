@@ -30,7 +30,12 @@ public:
             cout << "Ошибка: нельзя производить операции над разными типами данных" << endl;
             return UND;
         }
+
         return typeLHS;
+    }
+
+    bool isBinary() override {
+        return true;
     }
 
     int getLength(unique_ptr<bool> &fatalError) override {
@@ -43,6 +48,18 @@ public:
         }
 
         //array
+    }
+
+    void codegen(ofstream &out, Table table) override {
+        LHS.get()->codegen(out, table);
+        RHS.get()->codegen(out, table);
+
+        switch (Op) {
+            case '+': {
+                out << '\t' << "popl " << "%eax" << endl;
+                out << '\t' << "addl " << "%eax, " << "(%esp)" << endl;
+            }
+        }
     }
 };
 

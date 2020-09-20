@@ -22,7 +22,12 @@ public:
     }
 
     void codegen(ofstream &out, Table table) override {
-        out << "$" << Value;
+        //out << "$" << Value;
+        out << '\t' << "pushl " << "$" << Value << endl;
+    }
+
+    double codegenNum() override {
+        return Value;
     }
 };
 
