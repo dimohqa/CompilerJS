@@ -7,14 +7,12 @@ void printError(string error, Token token) {
 }
 
 int GetTokPrecedence(Token token) {
-    BinopPrecedence["<"] = 10;
     BinopPrecedence["=="] = 10;
-    BinopPrecedence["!="] = 10;
-    BinopPrecedence["!=="] = 10;
-    BinopPrecedence["==="] = 10;
+    BinopPrecedence["<"] = 10;
     BinopPrecedence[">"] = 10;
+    BinopPrecedence["!="] = 10;
     BinopPrecedence[">="] = 10;
-    BinopPrecedence["=<"] = 10;
+    BinopPrecedence["<="] = 10;
     BinopPrecedence["+"] = 50;
     BinopPrecedence["-"] = 50;
     BinopPrecedence["*"] = 60;
@@ -168,7 +166,7 @@ unique_ptr<ExprAST> Parser::parseBinOpRHS(int exprPrec, unique_ptr<ExprAST> LHS,
         if (tokPrec < exprPrec)
             return LHS;
 
-        char binOp = currentToken.lexeme[0];
+        string binOp = currentToken.lexeme;
 
         getNextToken();
         unique_ptr<ExprAST> RHS = ParsePrimary(fatalError);

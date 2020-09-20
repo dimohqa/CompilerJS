@@ -8,11 +8,11 @@ using namespace std;
 
 class BinaryExprAST : public ExprAST {
 private:
-    char Op;
+    string Op;
     unique_ptr<ExprAST> LHS, RHS;
 
 public:
-    BinaryExprAST(char op, unique_ptr<ExprAST> lhs, unique_ptr<ExprAST> rhs)
+    BinaryExprAST(string op, unique_ptr<ExprAST> lhs, unique_ptr<ExprAST> rhs)
         : Op(op), LHS(move(lhs)), RHS(move(rhs)) {}
 
     void print(int level) override {
@@ -54,35 +54,93 @@ public:
         LHS.get()->codegen(out, table);
         RHS.get()->codegen(out, table);
 
-        switch (Op) {
-            case '+': {
-                out << '\t' << "popl " << "%eax" << endl;
-                out << '\t' << "addl " << "%eax, " << "(%esp)" << endl;
-                break;
-            }
-            case '-': {
-                out << '\t' << "popl " << "%ebx" << endl;
-                out << '\t' << "popl " << "%eax" << endl;
-                out << '\t' << "subl " << "%ebx, %eax" << endl;
-                out << '\t' << "pushl " << "%eax" << endl;
-                break;
-            }
-            case '*': {
-                out << '\t' << "popl " << "%eax" << endl;
-                out << '\t' << "popl " << "%ebx" << endl;
-                out << '\t' << "imull " << "%ebx" << endl;
-                out << '\t' << "pushl " << "%eax" << endl;
-                break;
-            }
-            case '/': {
-                out << '\t' << "popl " << "%ebx" << endl;
-                out << '\t' << "popl " << "%eax" << endl;
-                out << '\t' << "pushl %eax" << endl;
-                out << '\t' << "movl $0, %edx" << endl;
-                out << '\t' << "idivl " << "%ebx" << endl;
-                out << '\t' << "pushl " << "%eax" << endl;
-                break;
-            }
+        if (Op == "+") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "addl " << "%eax, " << "(%esp)" << endl;
+            return;
+        }
+        if (Op == "-") {
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "subl " << "%ebx, %eax" << endl;
+            out << '\t' << "pushl " << "%eax" << endl;
+            return;
+        }
+        if (Op == "*") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "imull " << "%ebx" << endl;
+            out << '\t' << "pushl " << "%eax" << endl;
+            return;
+        }
+        if (Op == "/") {
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "pushl %eax" << endl;
+            out << '\t' << "movl $0, %edx" << endl;
+            out << '\t' << "idivl " << "%ebx" << endl;
+            out << '\t' << "pushl " << "%eax" << endl;
+            return;
+        }
+        if (Op == "==") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "je equal" << metks["equal"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "equal" << metks["equal"] << ":" << endl;
+            metks["equal"]++;
+            return;
+        }
+        if (Op == "<") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "jl less" << metks["less"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "less" << metks["less"] << ":" << endl;
+            metks["less"]++;
+            return;
+        }
+        if (Op == ">") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "jg greater" << metks["greater"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "greater" << metks["greater"] << ":"  << endl;
+            metks["greater"]++;
+            return;
+        }
+        if (Op == "!=") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "jne notEqual" << metks["notEqual"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "notEqual" << metks["notEqual"] << ":"  << endl;
+            metks["notEqual"]++;
+            return;
+        }
+        if (Op == "<=") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "jle lessEqual" << metks["lessEqual"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "lessEqual" << metks["lessEqual"] << ":" << endl;
+            metks["lessEqual"]++;
+            return;
+        }
+        if (Op == ">=") {
+            out << '\t' << "popl " << "%eax" << endl;
+            out << '\t' << "popl " << "%ebx" << endl;
+            out << '\t' << "cmpl %eax, %ebx" << endl;
+            out << '\t' << "jge greaterEqual" << metks["greaterEqual"] << endl;
+            out << "jmp next" << metks["next"] << endl;
+            out << "greaterEqual" << metks["greaterEqual"] << ":"  << endl;
+            metks["greaterEqual"]++;
+            return;
         }
     }
 };

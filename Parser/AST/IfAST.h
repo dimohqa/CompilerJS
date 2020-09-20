@@ -16,6 +16,7 @@ private:
 public:
     IfAST(unique_ptr<ExprAST> condition, unique_ptr<ExprAST> body)
         : Condition(move(condition)), Body(move(body)) {}
+
     void print(int level) override {
         printLevel(level);
         cout << "IF" << endl;
@@ -34,6 +35,13 @@ public:
     void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
         if (Body.get())
             Body.get()->table(table, level, fatalError);
+    }
+
+    void codegen(ofstream &out, Table table) override {
+        Condition->codegen(out, table);
+        Body->codegen(out, table);
+        out << "next" << metks["next"] << ":" << endl;
+        metks["next"]++;
     }
 };
 

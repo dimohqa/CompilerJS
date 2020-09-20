@@ -6,6 +6,7 @@
 #include "../../Lexer/Token.h"
 #include <memory>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -58,9 +59,12 @@ public:
 
         if (id != table.table.end()) {
             if (!id->second.getBinary()) {
-                out << '\t' << "movl ";
-                Expr.get()->codegen(out, table);
-                out << ", " << Name << endl;
+                if (Type != UNKNOWN) {
+                    Expr.get()->codegen(out, table);
+                    out << '\t' << "popl " << Name << endl;
+                } else {
+                    out << '\t' << "pushl " << Name << endl;
+                }
             } else {
                 Expr.get()->codegen(out, table);
                 out << '\t' << "popl " << Name << endl;

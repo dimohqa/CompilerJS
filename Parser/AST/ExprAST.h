@@ -5,11 +5,21 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 #include <fstream>
 #include "../../Lexer/Lexer.h"
 #include "../../Table/Table.h"
 
 using namespace std;
+static map<string, int> metks = {
+        {"equal", 1},
+        {"less", 1},
+        {"greater", 1},
+        {"notEqual", 1},
+        {"lessEqual", 1},
+        {"greaterEqual", 1},
+        {"next", 1}
+};
 
 class ExprAST {
 public:
@@ -55,7 +65,9 @@ public:
 
     virtual double codegenNum() {}
 
-    double codegenBin(ofstream &out, Table table) {}
+    virtual double codegenBin(ofstream &out, Table table) {}
+
+    virtual void codegenIfBody(ofstream &out, Table table) {}
 };
 
 

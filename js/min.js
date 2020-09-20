@@ -1,2 +1,4 @@
-let num = 10 - 3;
-console.log(num);
+let num = 3;
+if (4 > num + 2) {
+    console.log(num);
+}
