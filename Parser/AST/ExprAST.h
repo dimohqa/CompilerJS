@@ -67,7 +67,9 @@ public:
 
     virtual double codegenBin(ofstream &out, Table table) {}
 
-    virtual void codegenIfBody(ofstream &out, Table table) {}
+    //virtual void codegenIfBody(ofstream &out, Table table) {}
+
+    virtual void codegenWhile(ofstream &out, Table table) {}
 };
 
 

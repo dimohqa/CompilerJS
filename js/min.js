@@ -1,4 +1,4 @@
-let num = 5;
-while (num > 3) {
-    num = num - 1;
+let num = 3;
+while (num == 3) {
+    console.log(num);
 }

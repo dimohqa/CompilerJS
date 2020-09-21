@@ -28,6 +28,14 @@ public:
             Body.get()->table(table, level, fatalError);
         }
     }
+
+    void codegen(ofstream &out, Table table) override {
+        out << "jmp check" << endl;
+        out << "loopStart:" << endl;
+        Body->codegen(out, table);
+        out << "check:" << endl;
+        Condition->codegenWhile(out, table);
+    }
 };
 
 

@@ -59,7 +59,7 @@ public:
 
         if (id != table.table.end()) {
             if (!id->second.getBinary()) {
-                if (Type != UNKNOWN) {
+                if (Type != UNKNOWN || id->second.getType() && Expr.get()) {
                     Expr.get()->codegen(out, table);
                     out << '\t' << "popl " << Name << endl;
                 } else {
