@@ -180,57 +180,48 @@ public:
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "je loopStart" << endl;
+            out << '\t' << "je loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
         if (Op == "<") {
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "jl less" << metks["less"] << endl;
-            out << "jmp next" << metks["next"] << endl;
-            out << "less" << metks["less"] << ":" << endl;
-            metks["less"]++;
+            out << '\t' << "jl loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
         if (Op == ">") {
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "jg greater" << metks["greater"] << endl;
-            out << "jmp next" << metks["next"] << endl;
-            out << "greater" << metks["greater"] << ":"  << endl;
-            metks["greater"]++;
+            out << '\t' << "jg loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
         if (Op == "!=") {
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "jne notEqual" << metks["notEqual"] << endl;
-            out << "jmp next" << metks["next"] << endl;
-            out << "notEqual" << metks["notEqual"] << ":"  << endl;
-            metks["notEqual"]++;
+            out << '\t' << "jne loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
         if (Op == "<=") {
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "jle lessEqual" << metks["lessEqual"] << endl;
-            out << "jmp next" << metks["next"] << endl;
-            out << "lessEqual" << metks["lessEqual"] << ":" << endl;
-            metks["lessEqual"]++;
+            out << '\t' << "jle loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
         if (Op == ">=") {
             out << '\t' << "popl " << "%eax" << endl;
             out << '\t' << "popl " << "%ebx" << endl;
             out << '\t' << "cmpl %eax, %ebx" << endl;
-            out << '\t' << "jge greaterEqual" << metks["greaterEqual"] << endl;
-            out << "jmp next" << metks["next"] << endl;
-            out << "greaterEqual" << metks["greaterEqual"] << ":"  << endl;
-            metks["greaterEqual"]++;
+            out << '\t' << "jge loopStart" << metks["loopStart"] << endl;
+            metks["loopStart"]++;
             return;
         }
     }

@@ -36,7 +36,7 @@ public:
     }
 
     void codegenInit(Table table) override {
-        ofstream out("codegen.s");
+        ofstream out("../codegen.s");
         for (auto id = table.table.begin(); id != table.table.end(); id++) {
             out << ".bss" << endl;
             out << id->first << ":" << endl;

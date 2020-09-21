@@ -18,7 +18,8 @@ static map<string, int> metks = {
         {"notEqual", 1},
         {"lessEqual", 1},
         {"greaterEqual", 1},
-        {"next", 1}
+        {"next", 1},
+        {"loopStart" , 1}
 };
 
 class ExprAST {

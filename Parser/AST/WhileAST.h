@@ -30,8 +30,8 @@ public:
     }
 
     void codegen(ofstream &out, Table table) override {
-        out << "jmp check" << endl;
-        out << "loopStart:" << endl;
+        out << '\t' << "jmp check" << endl;
+        out << "loopStart" << metks["loopStart"] << ":" << endl;
         Body->codegen(out, table);
         out << "check:" << endl;
         Condition->codegenWhile(out, table);

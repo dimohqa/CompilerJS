@@ -2,7 +2,6 @@
 #include <memory>
 #include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
-#include "Table/Table.h"
 
 int main() {
     string filepath = "/home/nitro/university/CompilerJS/js/min.js";
@@ -17,6 +16,7 @@ int main() {
             break;
         }
     }*/
+
     Parser parser(lexer);
 
     unique_ptr<bool> fatalError(new bool(false));
@@ -36,6 +36,9 @@ int main() {
     }
 
     main.get()->codegenInit(table);
+    cout << "RUN:" << endl;
+    system("gcc -no-pie -g ../codegen.s -m32 -o ../codegen");
+    system("../codegen");
 
     return 0;
 }
