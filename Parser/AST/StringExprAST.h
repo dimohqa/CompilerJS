@@ -14,11 +14,27 @@ public:
         printLevel(level);
         cout << "String: " << Value << endl;
     }
+
     IdentifierType getType(unique_ptr<bool> &fatalError) override {
         return STR;
     }
+
     int getLength(unique_ptr<bool> &fatalError) override {
         return Value.length();
+    }
+
+    void codegenString(ofstream &out, string name) override {
+        string buffer = Value;
+        int i = 0;
+        while (i != buffer.length()) {
+            out << "movl $" << i << ", %ebx" << endl;
+            out << "movb $" << +buffer[i] << ", " << name << "(, %ebx, 1)" << endl;
+            i++;
+        }
+    }
+
+    string getNameClass() override {
+        return "String";
     }
 };
 

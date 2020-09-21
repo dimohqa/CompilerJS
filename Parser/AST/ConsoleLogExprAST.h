@@ -20,11 +20,32 @@ public:
     }
     void codegen(ofstream &out, Table table) {
         if (Arg.get()->getNameClass() == "Variable") {
-            out << '\t' << "pushl ";
-            out << Arg.get()->getName() << endl;
-            out << '\t' << "pushl $printf_format" << endl;
-            out << '\t' << "call printf" << endl;
+            auto id = table.table.find(Arg.get()->getName());
+            if (id->second.getType() == NUM) {
+                out << '\t' << "pushl ";
+                out << Arg.get()->getName() << endl;
+                out << '\t' << "pushl $printf_format" << endl;
+            }
+            if (id->second.getType() == STR) {
+                out << '\t' << "pushl $" << id->first << endl;
+                out << '\t' << "pushl $printfStringFormat" << endl;
+            }
         }
+        if (Arg.get()->isBinary()) {
+            Arg.get()->codegen(out, table);
+            out << '\t' << "pushl $printf_format" << endl;
+        }
+        if (Arg.get()->getNameClass() == "Number") {
+            Arg.get()->codegen(out, table);
+            out << '\t' << "pushl $printf_format" << endl;
+        }
+        //if (Arg.get()->getNameClass() == "String") {
+        //    out << '\t' << "pushl $" << id->first << endl;
+        //    out << '\t' << "pushl $printfStringFormat" << endl;
+        //}
+
+
+        out << '\t' << "call printf" << endl;
     }
 };
 

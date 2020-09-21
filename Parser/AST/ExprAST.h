@@ -54,7 +54,9 @@ public:
 
     virtual string getName() {}
 
-    virtual string getNameClass() {}
+    virtual string getNameClass() {
+        return "non";
+    }
 
     virtual bool isBinary() {
         return false;
@@ -71,6 +73,8 @@ public:
     //virtual void codegenIfBody(ofstream &out, Table table) {}
 
     virtual void codegenWhile(ofstream &out, Table table) {}
+
+    virtual void codegenString(ofstream &out, string name) {}
 };
 
 

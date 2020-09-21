@@ -58,16 +58,21 @@ public:
         auto id = table.table.find(Name);
 
         if (id != table.table.end()) {
-            if (!id->second.getBinary()) {
-                if (Type != UNKNOWN || id->second.getType() && Expr.get()) {
+            if (id->second.getType() == NUM) {
+                if (!id->second.getBinary()) {
+                    if (Type != UNKNOWN || id->second.getType() && Expr.get()) {
+                        Expr.get()->codegen(out, table);
+                        out << '\t' << "popl " << Name << endl;
+                    } else {
+                        out << '\t' << "pushl " << Name << endl;
+                    }
+                } else {
                     Expr.get()->codegen(out, table);
                     out << '\t' << "popl " << Name << endl;
-                } else {
-                    out << '\t' << "pushl " << Name << endl;
                 }
-            } else {
-                Expr.get()->codegen(out, table);
-                out << '\t' << "popl " << Name << endl;
+            }
+            if (id->second.getType() == STR) {
+                Expr.get()->codegenString(out, Name);
             }
         }
     }

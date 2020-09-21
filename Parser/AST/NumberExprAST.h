@@ -26,6 +26,10 @@ public:
         out << '\t' << "pushl " << "$" << Value << endl;
     }
 
+    string getNameClass() override {
+        return "Number";
+    }
+
     double codegenNum() override {
         return Value;
     }
