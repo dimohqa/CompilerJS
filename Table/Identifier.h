@@ -37,7 +37,7 @@ public:
                 Offset = 0;
                 break;
             case STR:
-                SizeByte = 1 * AmountOfElements;
+                SizeByte = 1 * AmountOfElements + 1;
                 SizeBite = SizeByte * 8;
                 Offset = 0;
                 break;

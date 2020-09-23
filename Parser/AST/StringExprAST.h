@@ -27,6 +27,11 @@ public:
         string buffer = Value;
         int i = 0;
         while (i != buffer.length()) {
+            if (i == buffer.length()) {
+                out << "movl $" << i << ", %ebx" << endl;
+                out << "movb $" << 0 << ", " << name <<  "(, %ebx, 1)" << endl;
+                continue;
+            }
             out << "movl $" << i << ", %ebx" << endl;
             out << "movb $" << +buffer[i] << ", " << name << "(, %ebx, 1)" << endl;
             i++;

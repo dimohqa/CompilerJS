@@ -1,2 +1,4 @@
-let str2 = "refwredqwef";
-console.log(str2);
+let str = "kek";
+const str2 = "wait";
+
+console.log(str);
