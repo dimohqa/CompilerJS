@@ -20,6 +20,7 @@ public:
         auto rangeId = table.equal_range(pairId.first);
         for (auto it = rangeId.first; it != rangeId.second; ++it) {
             if (identifier.getLevel() == it->second.getLevel()) {
+                identifier.print();
                 cout << "Ошибка: Повторное объявление переменной, удалите переменную: " << identifier.getName() << endl;
                 return false;
             }

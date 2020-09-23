@@ -1,14 +1,16 @@
 .bss
-str2:
-	.space 7
+b:
+	.space 4
 .bss
-str:
-	.space 6
+a:
+	.space 4
 .data
 printf_format:
 	.string "%d\n"
 printfStringFormat:
 	.string "%s\n"
+printfCharFormat:
+	.string "%c"
 .text
 .globl main
 .type main, @function
@@ -17,31 +19,91 @@ main:
 	pushl %ebp
 	movl %esp, %ebp
 
-movl $0, %ebx
-movb $34, str(, %ebx, 1)
-movl $1, %ebx
-movb $107, str(, %ebx, 1)
-movl $2, %ebx
-movb $101, str(, %ebx, 1)
-movl $3, %ebx
-movb $107, str(, %ebx, 1)
-movl $4, %ebx
-movb $34, str(, %ebx, 1)
-movl $0, %ebx
-movb $34, str2(, %ebx, 1)
-movl $1, %ebx
-movb $119, str2(, %ebx, 1)
-movl $2, %ebx
-movb $97, str2(, %ebx, 1)
-movl $3, %ebx
-movb $105, str2(, %ebx, 1)
-movl $4, %ebx
-movb $116, str2(, %ebx, 1)
-movl $5, %ebx
-movb $34, str2(, %ebx, 1)
-	pushl $str
-	pushl $printfStringFormat
+	pushl $2
+	popl a
+	pushl $2
+	popl b
+	jmp check
+loopStart1:
+	pushl b
+	pushl b
+	popl %eax
+	popl %ebx
+	imull %ebx
+	pushl %eax
+	popl b
+	pushl b
+	pushl $printf_format
 	call printf
+	pushl a
+	pushl $1
+	popl %eax
+	addl %eax, (%esp)
+	popl a
+	pushl a
+	pushl $2
+	popl %eax
+	popl %ebx
+	cmpl %eax, %ebx
+	jg greater1
+jmp next1
+greater1:
+	pushl $34
+	pushl $printfCharFormat
+	call printf
+	pushl $108
+	pushl $printfCharFormat
+	call printf
+	pushl $101
+	pushl $printfCharFormat
+	call printf
+	pushl $108
+	pushl $printfCharFormat
+	call printf
+	pushl $34
+	pushl $printfCharFormat
+	call printf
+	pushl $10
+	pushl $printfCharFormat
+	call printf
+	pushl a
+	pushl $4
+	popl %eax
+	popl %ebx
+	cmpl %eax, %ebx
+	jl less1
+jmp next1
+less1:
+	pushl $34
+	pushl $printfCharFormat
+	call printf
+	pushl $107
+	pushl $printfCharFormat
+	call printf
+	pushl $101
+	pushl $printfCharFormat
+	call printf
+	pushl $107
+	pushl $printfCharFormat
+	call printf
+	pushl $34
+	pushl $printfCharFormat
+	call printf
+	pushl $10
+	pushl $printfCharFormat
+	call printf
+next1:
+next2:
+check:
+	pushl a
+	pushl $3
+	pushl $3
+	popl %eax
+	addl %eax, (%esp)
+	popl %eax
+	popl %ebx
+	cmpl %eax, %ebx
+	jl loopStart1
 
 	movl $0, %eax
 	leave

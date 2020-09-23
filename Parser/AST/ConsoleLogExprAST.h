@@ -25,27 +25,27 @@ public:
                 out << '\t' << "pushl ";
                 out << Arg.get()->getName() << endl;
                 out << '\t' << "pushl $printf_format" << endl;
+                out << '\t' << "call printf" << endl;
             }
             if (id->second.getType() == STR) {
                 out << '\t' << "pushl $" << id->first << endl;
                 out << '\t' << "pushl $printfStringFormat" << endl;
+                out << '\t' << "call printf" << endl;
             }
         }
         if (Arg.get()->isBinary()) {
             Arg.get()->codegen(out, table);
             out << '\t' << "pushl $printf_format" << endl;
+            out << '\t' << "call printf" << endl;
         }
         if (Arg.get()->getNameClass() == "Number") {
             Arg.get()->codegen(out, table);
             out << '\t' << "pushl $printf_format" << endl;
+            out << '\t' << "call printf" << endl;
         }
-        //if (Arg.get()->getNameClass() == "String") {
-        //    out << '\t' << "pushl $" << id->first << endl;
-        //    out << '\t' << "pushl $printfStringFormat" << endl;
-        //}
-
-
-        out << '\t' << "call printf" << endl;
+        if (Arg.get()->getNameClass() == "String") {
+            Arg.get()->codegen(out, table);
+        }
     }
 };
 

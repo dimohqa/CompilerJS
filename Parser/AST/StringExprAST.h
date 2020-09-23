@@ -38,6 +38,20 @@ public:
         }
     }
 
+    void codegen(ofstream &out, Table table) override {
+        string buffer = Value;
+        int i = 0;
+        while (i != buffer.length()) {
+            out << '\t' << "pushl $" << +buffer[i] << endl;
+            out << '\t' << "pushl $printfCharFormat" << endl;
+            out << '\t' << "call printf" << endl;
+            i++;
+        }
+        out << '\t' << "pushl $" << 10 << endl;
+        out << '\t' << "pushl $printfCharFormat" << endl;
+        out << '\t' << "call printf" << endl;
+    }
+
     string getNameClass() override {
         return "String";
     }

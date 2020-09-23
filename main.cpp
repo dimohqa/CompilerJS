@@ -79,13 +79,13 @@ int main(int argc, char *argv[]) {
         unique_ptr<bool> fatalError(new bool(false));
 
         unique_ptr<ExprAST> main = parser.parse(fatalError);
-        //cout << "TREE: " << endl;
-        //main.get()->print(0);
+        cout << "TREE: " << endl;
+        main.get()->print(0);
 
-        //cout << "TABLE: " << endl;
+        cout << "TABLE: " << endl;
 
         auto table = main.get()->createTable(fatalError);
-        //table.print();
+        table.print();
 
         if (*fatalError) {
             cout << endl << "Fix error plz" << endl;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
         }
 
         main.get()->codegenInit(table);
-        //cout << "RUN:" << endl;
+        cout << "RUN:" << endl;
         system("gcc -no-pie -g ../codegen.s -m32 -o ../codegen");
         system("../codegen");
     }

@@ -39,6 +39,9 @@ public:
     }
 
     void table(Table &table, int level, unique_ptr<bool> &fatalError) override {
+        if (Type == UNKNOWN) {
+            return;
+        }
         if (Type == KW_CONST && !Expr.get()) {
             cout << "Ошибка: const обязательно нужно инициализировать" << endl;
         }

@@ -47,6 +47,8 @@ public:
         out << '\t' << ".string \"%d\\n\"" << endl;
         out << "printfStringFormat:" << endl;
         out << '\t' << ".string \"%s\\n\"" << endl;
+        out << "printfCharFormat:" << endl;
+        out << '\t' << ".string \"%c\"" << endl;
         out << ".text" << endl;
         out << ".globl main" << endl;
         out << ".type main, @function" << endl;
