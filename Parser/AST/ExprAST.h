@@ -19,7 +19,8 @@ static map<string, int> metks = {
         {"lessEqual", 1},
         {"greaterEqual", 1},
         {"next", 1},
-        {"loopStart" , 1}
+        {"loopStart" , 1},
+        {"check", 1},
 };
 
 class ExprAST {

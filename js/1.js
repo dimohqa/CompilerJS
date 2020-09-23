@@ -1,4 +1,9 @@
-( ) * % $ethe25 / &()%
-/*    425245 23452345 23443
-        0x123124 0o435245*/
-const agb32= 0wthrth42514.436236;
+let a = 2;
+if (1) {
+    let b = a * 2;
+    console.log(b);
+}
+if (0) {
+    let b = a * 2;
+    console.log(b);
+}
